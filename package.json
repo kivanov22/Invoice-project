@@ -19,6 +19,11 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.0",
+    "@mui/material": "^6.4.0",
+    "@mui/x-tree-view": "^7.24.1",
     "@payloadcms/db-mongodb": "latest",
     "@payloadcms/live-preview-react": "latest",
     "@payloadcms/next": "latest",
@@ -34,9 +39,11 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@react-spring/web": "^9.7.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
+    "date-fns": "^4.1.0",
     "geist": "^1.3.0",
     "graphql": "^16.8.2",
     "lucide-react": "^0.378.0",

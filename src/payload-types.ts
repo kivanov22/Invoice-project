@@ -16,6 +16,10 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    banks: Bank;
+    invoices: Invoice;
+    products: Product;
+    productCategories: ProductCategory;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -32,6 +36,10 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    banks: BanksSelect<false> | BanksSelect<true>;
+    invoices: InvoicesSelect<false> | InvoicesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    productCategories: ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -672,6 +680,67 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banks".
+ */
+export interface Bank {
+  id: string;
+  title: string;
+  slug: string;
+  iban?: string | null;
+  bic?: string | null;
+  createdOn?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices".
+ */
+export interface Invoice {
+  id: string;
+  title?: string | null;
+  mol?: string | null;
+  bank?: (string | null) | Bank;
+  documentNumber?: string | null;
+  invoiceDate?: string | null;
+  accountant?: string | null;
+  invoicePayed?: boolean | null;
+  cancellation?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  title?: string | null;
+  code?: string | null;
+  brand?: string | null;
+  price?: number | null;
+  discount?: number | null;
+  active?: boolean | null;
+  totalPrice?: number | null;
+  category: string | ProductCategory;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productCategories".
+ */
+export interface ProductCategory {
+  id: string;
+  title: string;
+  parent?: (string | null) | ProductCategory;
+  children?: (string | ProductCategory)[] | null;
+  productCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -861,6 +930,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'banks';
+        value: string | Bank;
+      } | null)
+    | ({
+        relationTo: 'invoices';
+        value: string | Invoice;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'productCategories';
+        value: string | ProductCategory;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1218,6 +1303,63 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banks_select".
+ */
+export interface BanksSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  iban?: T;
+  bic?: T;
+  createdOn?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices_select".
+ */
+export interface InvoicesSelect<T extends boolean = true> {
+  title?: T;
+  mol?: T;
+  bank?: T;
+  documentNumber?: T;
+  invoiceDate?: T;
+  accountant?: T;
+  invoicePayed?: T;
+  cancellation?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  code?: T;
+  brand?: T;
+  price?: T;
+  discount?: T;
+  active?: T;
+  totalPrice?: T;
+  category?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productCategories_select".
+ */
+export interface ProductCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  parent?: T;
+  children?: T;
+  productCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
