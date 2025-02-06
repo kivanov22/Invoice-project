@@ -21,6 +21,9 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 import { Tab } from '@mui/material'
+import { EditBankButton } from '../Bank/editButton'
+import { DeleteBankButton } from '../Bank/deleteButton'
+import { CustomButton } from '../common/Button'
 
 interface Data {
   id: number
@@ -31,6 +34,7 @@ interface Data {
   discount: number
   active: boolean
   totalPrice: number
+  actions: string
 }
 
 function createData(
@@ -42,6 +46,7 @@ function createData(
   discount: number,
   active: boolean,
   totalPrice: number,
+  actions: string,
 ): Data {
   return {
     id,
@@ -52,6 +57,7 @@ function createData(
     discount,
     active,
     totalPrice,
+    actions,
   }
 }
 
@@ -141,6 +147,12 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: false,
     label: 'Total Price',
+  },
+  {
+    id: 'actions',
+    numeric: true,
+    disablePadding: false,
+    label: 'Actions',
   },
 ]
 
@@ -255,8 +267,6 @@ export default function CustomTable({ collection, onEdit, onDelete }) {
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-
-  // const products = collection?.docs || [];
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -378,6 +388,28 @@ export default function CustomTable({ collection, onEdit, onDelete }) {
                     </TableCell>
                     {/* <TableCell align="right">{row.active}</TableCell> */}
                     <TableCell align="right">{row.totalPrice}</TableCell>
+                    <TableCell align="right" className="flex space-x-5">
+                      <CustomButton
+                        Id={row.id}
+                        docs={collection}
+                        collection="products"
+                        buttonName="EDIT"
+                        modalName="Edit product"
+                        method="GET"
+                        buttonAction={row.id}
+                        onEdit={onEdit}
+                      ></CustomButton>
+                      <CustomButton
+                        Id={row.id}
+                        docs={collection}
+                        collection="products"
+                        buttonName="DELETE"
+                        modalName="Delete product"
+                        method="DELETE"
+                        buttonAction={row.id}
+                        onDelete={onDelete}
+                      ></CustomButton>
+                    </TableCell>
                   </TableRow>
                 )
               })}

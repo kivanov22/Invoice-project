@@ -1,15 +1,43 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal, Box, TextField, Typography } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
 
-export const AddBankButton: React.FC = () => {
+interface CustomButtonProps {
+  buttonName: string
+  modalName: string
+  Id?: string
+  docs: Record<string, any>[]
+  onEdit?: () => void
+  onDelete?: () => void
+  collection: string
+  buttonAction: string
+  method: 'POST' | 'GET' | 'DELETE'
+}
+
+export const CustomButton: React.FC<CustomButtonProps> = ({
+  collection,
+  docs,
+  method,
+  buttonAction,
+  buttonName,
+  modalName,
+}) => {
   const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState({ title: '', iban: '', bic: '', slug: '' })
+  const [formData, setFormData] = useState<Record<string, any>>({})
+  console.log('Check formData', formData)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+  useEffect(() => {
+    if (open) {
+      setFormData(buttonAction === 'edit' && docs[0] ? docs[0] : {}) // Set first product as default when opening modal
+    } else {
+      setFormData({}) // Reset when closing
+    }
+  }, [open, docs, buttonAction]) //maybe and close
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -18,30 +46,37 @@ export const AddBankButton: React.FC = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
+
     try {
-      const response = await fetch('/api/banks/create', {
-        method: 'POST',
+      const requestOptions: RequestInit = {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
+        ...(method !== 'GET' && method !== 'DELETE' ? { body: JSON.stringify(formData) } : {}),
+      }
+      //   const url = `/api/${collection}${buttonAction !== 'create' ? `/${buttonAction}` : ''}`
+      const response = await fetch(`/api/${collection}/${buttonAction}`, requestOptions)
 
       if (response.ok) {
-        const newBank = await response.json()
-        console.log('Bank created:', newBank)
+        const result = await response.json()
+        console.log(`Succesful:${buttonAction}`, result)
         handleClose()
-        setFormData({ title: '', iban: '', bic: '', slug: '' })
+        // setFormData({ title: '', iban: '', bic: '', slug: '' })
       } else {
-        console.error('Failed to create bank')
+        console.error(`Failed to ${buttonAction}!`)
       }
     } catch (error) {
-      console.error('Error creating bank:', error)
+      console.error(`Error ${buttonAction}!:`, error)
     }
+  }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
   return (
     <>
       <Button variant="contained" color="secondary" size="small" onClick={handleOpen}>
-        Add Bank
+        {buttonName}
         <AddBoxIcon />
       </Button>
 
@@ -59,42 +94,24 @@ export const AddBankButton: React.FC = () => {
             borderRadius: 2,
           }}
         >
-          <Typography variant="h6" component="h2" mb={2}>
-            Add New Bank
+          <Typography variant="h6" component="h2" mb={2} className="text-black">
+            {modalName}
           </Typography>
 
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="IBAN"
-            name="iban"
-            value={formData.iban}
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="BIC"
-            name="bic"
-            value={formData.bic}
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Slug"
-            name="slug"
-            value={formData.slug}
-            onChange={handleChange}
-          />
+          {formData &&
+            typeof formData === 'object' &&
+            !Array.isArray(formData) &&
+            Object.keys(formData).map((key) => (
+              <TextField
+                fullWidth
+                margin="normal"
+                key={key}
+                label={capitalizeFirstLetter(key)}
+                name={key}
+                value={formData[key] || ''}
+                onChange={handleChange}
+              />
+            ))}
 
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="outlined" onClick={handleClose}>

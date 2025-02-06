@@ -11,6 +11,11 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
 import CustomTable from '@/components/CustomTable'
 import BasicSimpleTreeView from '@/components/CategoryTree'
+import { CustomButton } from '@/components/common/Button'
+import CustomFilter from '@/components/Product/productFilter'
+import { Products } from '@/collections/Products'
+import ProductFilter from '@/components/Product/productFilter'
+import CircularWithValueLabel from '@/components/common/Loader'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -19,7 +24,7 @@ const PageClient: React.FC = () => {
     setHeaderTheme('light')
   }, [setHeaderTheme])
 
-  const [filter, setFilter] = useState('')
+  const [filters, setFilters] = useState({ code: '', title: '', brand: '' })
   const [products, setProducts] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
   const [productCategories, setProductCategories] = useState<any>({ docs: [] })
@@ -40,22 +45,33 @@ const PageClient: React.FC = () => {
     fetchCategories()
   }, [fetchCategories])
 
-  const fetchProducts = useCallback(async (filter?: string) => {
-    setLoading(true)
+  const fetchProducts = useCallback(
+    async (filters?: { code?: string; title?: string; brand?: string }) => {
+      setLoading(true)
 
-    const endPoint = filter ? `/api/products?where[title][contains]=${filter}` : '/api/products'
+      const queryParams = new URLSearchParams()
 
-    try {
-      const response = await fetch(endPoint) //'/api/products'
-      const data = await response.json()
-      setProducts(data)
-    } catch (error) {
-      console.error('Failed to fetch banks:', error)
-      setProducts({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+      if (filters?.code) queryParams.append('where[code][contains]', filters.code)
+      if (filters?.title) queryParams.append('where[title][contains]', filters.title)
+      if (filters?.brand) queryParams.append('where[brand][contains]', filters.brand)
+
+      const endPoint = queryParams.toString()
+        ? `/api/products?${queryParams.toString()}`
+        : '/api/products'
+
+      try {
+        const response = await fetch(endPoint) //'/api/products'
+        const data = await response.json()
+        setProducts(data)
+      } catch (error) {
+        console.error('Failed to fetch banks:', error)
+        setProducts({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+      } finally {
+        setLoading(false)
+      }
+    },
+    [],
+  )
 
   useEffect(() => {
     fetchProducts()
@@ -66,7 +82,7 @@ const PageClient: React.FC = () => {
   }
 
   const handleSearch = () => {
-    fetchProducts(filter)
+    fetchProducts(filters)
   }
 
   const handleUpdate = () => {
@@ -74,7 +90,13 @@ const PageClient: React.FC = () => {
   }
 
   if (loading) {
-    return <div className="text-5xl text-center">Loading...</div>
+    return (
+      <div className="flex justify-center w-30">
+        <CircularWithValueLabel />
+      </div>
+    )
+
+    // <div className="text-5xl text-center">Loading...</div>
   }
 
   return (
@@ -84,13 +106,20 @@ const PageClient: React.FC = () => {
           <h1 className="text-white">Products</h1>
         </div>
         <div className="">
-          <AddBankButton />
+          {/* <CustomButton
+            method="POST" //method for api
+            docs={products.docs} //products object
+            collection={collectionName} //collection name products
+            buttonAction="create" // what functionality is button create/edit/delete
+            buttonName="Add Product"
+            modalName="Create product"
+          /> */}
         </div>
       </div>
 
       <div className="flex space-x-5 items-center border border-white p-5 mb-5">
         <div className="flex flex-col flex-1">
-          {/* <BanksFilter onFilterChange={setFilter} fetchBanks={fetchProducts} /> */}
+          <ProductFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
             <p className="text-4xl">Results:{products.docs.length}</p>
           </div>
