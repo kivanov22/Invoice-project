@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Box, Button } from '@mui/material'
-import { Product } from '@/payload-types'
+import { TextField, Box } from '@mui/material'
 
 interface ProductFilterProps {
   onFilterChange: (filters: { code: string; title: string; brand: string }) => void
@@ -12,7 +11,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ onFilterChange }) => {
     title: '',
     brand: '',
   })
-  const [search, setSearch] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

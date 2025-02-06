@@ -9,6 +9,7 @@ import { Pagination } from '@payloadcms/ui'
 import React, { useCallback, useEffect, useState } from 'react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
+import CircularWithValueLabel from '@/components/common/Loader'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -17,14 +18,21 @@ const PageClient: React.FC = () => {
     setHeaderTheme('light')
   }, [setHeaderTheme])
 
-  const [filter, setFilter] = useState('')
+  const [filters, setFilters] = useState({ title: '', iban: '', bic: '' })
   const [banks, setBanks] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
 
-  const fetchBanks = useCallback(async (filter?: string) => {
+  const fetchBanks = useCallback(async (filters?: { title: string; iban: string; bic: string }) => {
     setLoading(true)
 
-    const endPoint = filter ? `/api/banks?where[title][contains]=${filter}` : '/api/banks'
+    const queryParams = new URLSearchParams()
+
+    if (filters?.title) queryParams.append('where[title][contains]', filters.title)
+    if (filters?.iban) queryParams.append('where[iban][contains]', filters.iban)
+    if (filters?.bic) queryParams.append('where[bic][contains]', filters.bic)
+
+    const endPoint = queryParams.toString() ? `/api/banks?${queryParams.toString()}` : '/api/banks'
+    // const endPoint = filter ? `/api/banks?where[title][contains]=${filter}` : '/api/banks'
 
     try {
       const response = await fetch(endPoint) //'/api/banks'
@@ -47,7 +55,7 @@ const PageClient: React.FC = () => {
   }
 
   const handleSearch = () => {
-    fetchBanks(filter)
+    fetchBanks(filters)
   }
 
   const handleUpdate = () => {
@@ -55,7 +63,11 @@ const PageClient: React.FC = () => {
   }
 
   if (loading) {
-    return <div className="text-5xl text-center">Loading...</div>
+    return (
+      <div className="flex justify-center w-30">
+        <CircularWithValueLabel />
+      </div>
+    )
   }
 
   return (
@@ -68,9 +80,9 @@ const PageClient: React.FC = () => {
           <AddBankButton />
         </div>
       </div>
-      <div className="flex space-x-5 items-center">
+      <div className="flex space-x-5 items-center border border-white p-5 mb-5">
         <div className="flex flex-col flex-1">
-          <BanksFilter onFilterChange={setFilter} fetchBanks={fetchBanks} />
+          <BanksFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
             <p className="text-4xl">Results:{banks.docs.length}</p>
           </div>

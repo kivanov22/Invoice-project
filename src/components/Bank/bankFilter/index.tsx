@@ -1,26 +1,22 @@
 import React, { useState } from 'react'
-import { TextField, Box, Button } from '@mui/material'
+import { TextField, Box } from '@mui/material'
 
 interface BanksFilterProps {
-  onFilterChange: (filter: string) => void
-  fetchBanks: (filter?: string) => void
+  onFilterChange: (filters: { title: string; iban: string; bic: string }) => void
 }
 
-const BanksFilter: React.FC<BanksFilterProps> = ({ onFilterChange, fetchBanks }) => {
-  const [filter, setFilter] = useState('')
-  const [search, setSearch] = useState('')
-
+const BanksFilter: React.FC<BanksFilterProps> = ({ onFilterChange }) => {
+  const [filters, setFilters] = useState({
+    title: '',
+    iban: '',
+    bic: '',
+  })
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setFilter(value)
-    // setSearch(value)
-    onFilterChange(value) // Send filter value to parent
-  }
+    const { name, value } = e.target
 
-  const handleClear = () => {
-    setSearch('')
-    fetchBanks()
-    // onFilterChange('') // Reset filter
+    const updatedFilters = { ...filters, [name]: value }
+    setFilters(updatedFilters)
+    onFilterChange(updatedFilters)
   }
 
   return (
@@ -40,35 +36,33 @@ const BanksFilter: React.FC<BanksFilterProps> = ({ onFilterChange, fetchBanks })
     >
       <div className="flex gap-2">
         <TextField
-          label="Bank name"
+          label="Title"
           variant="outlined"
+          name="title"
           fullWidth
-          value={filter}
+          value={filters.title}
           onChange={handleInputChange}
-          placeholder="Enter bank name..."
+          placeholder="Title..."
         />
         <TextField
-          label="Bank Iban"
+          label="Iban"
           variant="outlined"
+          name="iban"
           fullWidth
-          value={filter}
+          value={filters.iban}
           onChange={handleInputChange}
-          placeholder="Enter bank iban..."
+          placeholder="Iban..."
         />
         <TextField
-          label="Bank Bic"
+          label="Bic"
+          name="bic"
           variant="outlined"
           fullWidth
-          value={filter}
+          value={filters.bic}
           onChange={handleInputChange}
-          placeholder="Enter bank bic..."
+          placeholder="Bic..."
         />
       </div>
-      {/* <div>
-        <Button variant="outlined" onClick={handleClear}>
-          Clear
-        </Button>
-      </div> */}
     </Box>
   )
 }
