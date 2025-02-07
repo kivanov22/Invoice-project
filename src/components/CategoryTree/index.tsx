@@ -16,8 +16,6 @@ interface BasicSimpleTreeViewProps {
 }
 
 const BasicSimpleTreeView: React.FC<BasicSimpleTreeViewProps> = ({ categories }) => {
-  console.log('Check what comes from parent', categories.docs)
-
   // Convert flat list into hierarchical structure
   const buildTree = (categoriesList: Category[]) => {
     const categoryMap = new Map<string, Category>()

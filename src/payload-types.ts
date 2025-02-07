@@ -715,7 +715,7 @@ export interface Invoice {
  */
 export interface Product {
   id: string;
-  title?: string | null;
+  title: string;
   code?: string | null;
   brand?: string | null;
   price?: number | null;

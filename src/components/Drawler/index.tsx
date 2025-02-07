@@ -18,8 +18,6 @@ export default function TemporaryDrawer({ navItems }: { navItems: any }) {
     setOpen(newOpen)
   }
 
-  console.log(navItems)
-
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>

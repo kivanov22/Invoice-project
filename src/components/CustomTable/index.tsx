@@ -348,7 +348,7 @@ export default function CustomTable({ collection, onEdit, onDelete }) {
               {visibleRows.map((row, index) => {
                 const isItemSelected = selected.includes(row.id)
                 const labelId = `enhanced-table-checkbox-${index}`
-                console.log(row)
+                // console.log(row)
 
                 return (
                   <TableRow

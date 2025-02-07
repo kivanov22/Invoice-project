@@ -26,7 +26,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState<Record<string, any>>({})
-  console.log('Check formData', formData)
+  // console.log('Check formData', formData)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)

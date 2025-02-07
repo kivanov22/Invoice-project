@@ -16,6 +16,7 @@ import CustomFilter from '@/components/Product/productFilter'
 import { Products } from '@/collections/Products'
 import ProductFilter from '@/components/Product/productFilter'
 import CircularWithValueLabel from '@/components/common/Loader'
+import ProductAddEditModal from '@/components/Product/productAddEditDialog'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -28,6 +29,7 @@ const PageClient: React.FC = () => {
   const [products, setProducts] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
   const [productCategories, setProductCategories] = useState<any>({ docs: [] })
+  const [openModal, setOpenModal] = useState(false)
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -89,6 +91,10 @@ const PageClient: React.FC = () => {
     fetchProducts() // Refresh the table after an update or delete
   }
 
+  const handleOpenModal = () => {
+    setOpenModal(true)
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center w-30">
@@ -104,14 +110,8 @@ const PageClient: React.FC = () => {
           <h1 className="text-white">Products</h1>
         </div>
         <div className="">
-          {/* <CustomButton
-            method="POST" //method for api
-            docs={products.docs} //products object
-            collection={collectionName} //collection name products
-            buttonAction="create" // what functionality is button create/edit/delete
-            buttonName="Add Product"
-            modalName="Create product"
-          /> */}
+          {/* <Button variant="contained" onClick={handleOpenModal} /> */}
+          <ProductAddEditModal />
         </div>
       </div>
 

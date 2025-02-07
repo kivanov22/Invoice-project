@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { ObjectId } from 'mongodb'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -6,6 +7,7 @@ export const Products: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
+      required: true,
     },
     {
       name: 'code',
@@ -41,9 +43,14 @@ export const Products: CollectionConfig = {
   hooks: {
     afterChange: [
       async ({ doc, req }) => {
-        const categoryId = doc.category
+        // const categoryId = doc.category || doc.category
+
+        const categoryId = typeof doc.category === 'object' ? doc.category.id : doc.category
 
         if (categoryId) {
+          if (typeof categoryId !== 'string') {
+            throw new Error('Invalid category ID')
+          }
           // Count how many products are in this category
           const productsInCategory = await req.payload.find({
             collection: 'products',
