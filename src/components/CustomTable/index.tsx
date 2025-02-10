@@ -20,7 +20,7 @@ import Switch from '@mui/material/Switch'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
-import { Tab } from '@mui/material'
+import { Button, Tab } from '@mui/material'
 import { EditBankButton } from '../Bank/editButton'
 import { DeleteBankButton } from '../Bank/deleteButton'
 import { CustomButton } from '../common/Button'
@@ -389,7 +389,13 @@ export default function CustomTable({ collection, onEdit, onDelete }) {
                     {/* <TableCell align="right">{row.active}</TableCell> */}
                     <TableCell align="right">{row.totalPrice}</TableCell>
                     <TableCell align="right" className="flex space-x-5">
-                      <CustomButton
+                      <Button variant="contained" onClick={() => onEdit(row)}>
+                        Edit
+                      </Button>
+                      <Button variant="outlined" color="error" onClick={() => onDelete(row.id)}>
+                        Delete
+                      </Button>
+                      {/* <CustomButton
                         Id={row.id}
                         docs={collection}
                         collection="products"
@@ -408,7 +414,7 @@ export default function CustomTable({ collection, onEdit, onDelete }) {
                         method="DELETE"
                         buttonAction={row.id}
                         onDelete={onDelete}
-                      ></CustomButton>
+                      ></CustomButton> */}
                     </TableCell>
                   </TableRow>
                 )

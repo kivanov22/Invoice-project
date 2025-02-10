@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
@@ -22,7 +22,12 @@ const style = {
   p: 4,
 }
 
-interface ProductAddEditModalProps {}
+interface ProductAddEditModalProps {
+  open: boolean
+  onClose: () => void
+  onSave: () => void
+  product?: any | null
+}
 
 interface Category {
   id: string
@@ -33,10 +38,15 @@ interface Category {
   updatedAt: string
 }
 
-const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
-  const [open, setOpen] = React.useState(false)
-  const [categories, setCategories] = React.useState<Category[]>([])
-  const [product, setProduct] = React.useState({
+const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
+  open,
+  onClose,
+  onSave,
+  product,
+}) => {
+  // const [open, setOpen] = React.useState(false)
+  const [categories, setCategories] = useState<Category[]>([])
+  const [formData, setFormData] = useState({
     title: '',
     code: '',
     brand: '',
@@ -46,10 +56,10 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
     active: false,
     category: '' as string | Category,
   })
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  // const handleOpen = () => setOpen(true)
+  // const handleClose = () => setOpen(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       fetch('/api/categories')
         .then((res) => res.json())
@@ -58,38 +68,58 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
     }
   }, [open])
 
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        code: product.code,
+        title: product.title,
+        brand: product.brand,
+        price: product.price,
+        discount: product.discount,
+        totalPrice: product.totalPrice,
+        active: product.active,
+        category: product.category,
+      })
+    } else {
+      setFormData({
+        code: '',
+        title: '',
+        brand: '',
+        price: 0,
+        discount: 0,
+        totalPrice: 0,
+        active: false,
+        category: '',
+      })
+    }
+  }, [product])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
 
-    // const newValue = ['price', 'discount', 'totalPrice'np].includes(name)
-    //   ? parseFloat(value) || 0
-    //   : value
-
     const newProduct = { ...product, [name]: value } //last change
-    setProduct(newProduct)
-
-    // setProduct((prev) => ({ ...prev, [name]: newValue }))
+    setFormData(newProduct)
   }
 
   const handleCategoryChange = (event: any) => {
     const selectedCategory = categories.find((cat) => cat.id === event.target.value)
-    setProduct((prev) => ({ ...prev, category: selectedCategory || '' }))
-    // setProduct((prev) => ({ ...prev, category: event.target.value }))
+    setFormData((prev) => ({ ...prev, category: selectedCategory || '' }))
   }
 
-  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
+    const endPoint = product ? `/api/products/${product.id}` : '/api/products'
+    const method = product ? 'PUT' : 'POST'
 
     const formattedProduct = {
-      ...product,
-      price: Number(product.price) || 0,
-      discount: Number(product.discount) || 0,
-      totalPrice: Number(product.totalPrice) || 0,
-      category: typeof product.category === 'object' ? product.category.id : product.category,
+      ...formData,
+      price: Number(formData.price) || 0,
+      discount: Number(formData.discount) || 0,
+      totalPrice: Number(formData.totalPrice) || 0,
+      category: typeof formData.category === 'object' ? formData.category.id : formData.category,
     }
     try {
-      const response = await fetch('/api/products/create', {
-        method: 'POST',
+      const response = await fetch(endPoint, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedProduct), //product
       })
@@ -97,8 +127,8 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
       if (response.ok) {
         const newProduct = await response.json()
         console.log('Product created:', newProduct)
-        handleClose()
-        setProduct({
+        onSave()
+        setFormData({
           title: '',
           code: '',
           brand: '',
@@ -118,10 +148,9 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Create Product</Button>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -132,7 +161,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
             component="h2"
             sx={{ color: 'black', mb: 5 }}
           >
-            Create a product
+            {product ? 'Update product' : 'Create product'}
           </Typography>
 
           <div className="flex flex-col gap-5 items-center">
@@ -142,7 +171,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
                 name="code"
                 variant="outlined"
                 fullWidth
-                value={product.code}
+                value={formData.code}
                 onChange={handleInputChange}
                 placeholder={`Enter Code...`}
               />
@@ -151,7 +180,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
                 name="title"
                 variant="outlined"
                 fullWidth
-                value={product.title}
+                value={formData.title}
                 onChange={handleInputChange}
                 placeholder={`Enter Title...`}
               />
@@ -160,7 +189,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
                 name="brand"
                 variant="outlined"
                 fullWidth
-                value={product.brand}
+                value={formData.brand}
                 onChange={handleInputChange}
                 placeholder={`Enter Brand...`}
               />
@@ -171,7 +200,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
                 name="price"
                 variant="outlined"
                 fullWidth
-                value={product.price}
+                value={formData.price}
                 onChange={handleInputChange}
                 placeholder={`Enter Price...`}
               />
@@ -180,7 +209,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
                 name="discount"
                 variant="outlined"
                 fullWidth
-                value={product.discount}
+                value={formData.discount}
                 onChange={handleInputChange}
                 placeholder={`Enter Discount...`}
               />
@@ -189,7 +218,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
                 name="totalPrice"
                 variant="outlined"
                 fullWidth
-                value={product.totalPrice}
+                value={formData.totalPrice}
                 onChange={handleInputChange}
                 placeholder={`Enter Total Price...`}
               />
@@ -199,7 +228,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
               <Typography sx={{ color: 'black', mb: 1 }}>Category</Typography>
               <Select
                 value={
-                  typeof product.category === 'object' ? product.category.id : product.category
+                  typeof formData.category === 'object' ? formData.category.id : formData.category
                 }
                 onChange={handleCategoryChange}
                 fullWidth
@@ -216,13 +245,13 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = () => {
               <Typography sx={{ color: 'black', ml: 1 }}>Active</Typography>
               <Checkbox
                 name="active"
-                checked={product.active}
-                onChange={(e) => setProduct((prev) => ({ ...prev, active: e.target.checked }))}
+                checked={formData.active}
+                onChange={(e) => setFormData((prev) => ({ ...prev, active: e.target.checked }))}
               />
             </div>
             <div className="flex">
-              <Button onClick={handleSave}>Save</Button>
-              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={handleSubmit}>{product ? 'Update' : 'Create'}</Button>
+              <Button onClick={onClose}>Cancel</Button>
             </div>
           </div>
         </Box>

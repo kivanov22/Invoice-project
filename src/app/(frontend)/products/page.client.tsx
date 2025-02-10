@@ -30,6 +30,7 @@ const PageClient: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [productCategories, setProductCategories] = useState<any>({ docs: [] })
   const [openModal, setOpenModal] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -91,8 +92,19 @@ const PageClient: React.FC = () => {
     fetchProducts() // Refresh the table after an update or delete
   }
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (product?: any) => {
+    setSelectedProduct(product || null)
     setOpenModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    setSelectedProduct(null)
+  }
+
+  const handleSaveProduct = async () => {
+    await fetchProducts()
+    handleCloseModal()
   }
 
   if (loading) {
@@ -110,10 +122,19 @@ const PageClient: React.FC = () => {
           <h1 className="text-white">Products</h1>
         </div>
         <div className="">
-          {/* <Button variant="contained" onClick={handleOpenModal} /> */}
-          <ProductAddEditModal />
+          <Button variant="contained" onClick={() => handleOpenModal()}>
+            Add Product
+          </Button>
+          {/* {openModal ? <ProductAddEditModal /> : null} */}
         </div>
       </div>
+
+      <ProductAddEditModal
+        open={openModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveProduct}
+        product={selectedProduct}
+      />
 
       <div className="flex space-x-5 items-center border border-white p-5 mb-5">
         <div className="flex flex-col flex-1">
@@ -143,7 +164,11 @@ const PageClient: React.FC = () => {
             <CircularProgress />
           ) : (
             <div className="ml-4 mr-4">
-              <CustomTable collection={products} onEdit={handleUpdate} onDelete={handleUpdate} />
+              <CustomTable
+                collection={products}
+                onEdit={handleOpenModal}
+                onDelete={fetchProducts}
+              />
             </div>
           )}
         </div>
