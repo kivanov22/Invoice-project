@@ -40,6 +40,9 @@ export const Products: CollectionConfig = {
       required: true,
     },
   ],
+  access: {
+    read: () => true,
+  },
   hooks: {
     afterChange: [
       async ({ doc, req }) => {

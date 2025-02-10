@@ -37,4 +37,7 @@ export const Invoices: CollectionConfig = {
       type: 'checkbox',
     },
   ],
+  access: {
+    read: () => true,
+  },
 }

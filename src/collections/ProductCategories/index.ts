@@ -36,4 +36,7 @@ export const ProductCategories: CollectionConfig = {
       defaultValue: 0, // Number of products in the category
     },
   ],
+  access: {
+    read: () => true,
+  },
 }

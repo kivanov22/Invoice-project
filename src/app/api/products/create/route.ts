@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import { ObjectId } from 'mongodb'
 
 export async function POST(req: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
 
-    const data = await req.json() // Expect `data` in the request body
+    const data = await req.json()
 
     if (!data || Object.keys(data).length === 0) {
       return NextResponse.json({ error: 'No data provided' }, { status: 400 })
