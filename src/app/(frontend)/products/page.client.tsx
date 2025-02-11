@@ -17,6 +17,7 @@ import { Products } from '@/collections/Products'
 import ProductFilter from '@/components/Product/productFilter'
 import CircularWithValueLabel from '@/components/common/Loader'
 import ProductAddEditModal from '@/components/Product/productAddEditDialog'
+import CategoryTree from '@/components/Product/categoryTree/CategoryTree'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -49,7 +50,7 @@ const PageClient: React.FC = () => {
   }, [fetchCategories])
 
   const fetchProducts = useCallback(
-    async (filters?: { code?: string; title?: string; brand?: string }) => {
+    async (filters?: { code?: string; title?: string; brand?: string; categoryId?: string }) => {
       setLoading(true)
 
       const queryParams = new URLSearchParams()
@@ -57,6 +58,7 @@ const PageClient: React.FC = () => {
       if (filters?.code) queryParams.append('where[code][contains]', filters.code)
       if (filters?.title) queryParams.append('where[title][contains]', filters.title)
       if (filters?.brand) queryParams.append('where[brand][contains]', filters.brand)
+      if (filters?.categoryId) queryParams.append('where[category][equals]', filters.categoryId)
 
       const endPoint = queryParams.toString()
         ? `/api/products?${queryParams.toString()}`
@@ -88,8 +90,8 @@ const PageClient: React.FC = () => {
     fetchProducts(filters)
   }
 
-  const handleUpdate = () => {
-    fetchProducts() // Refresh the table after an update or delete
+  const handleCategorySelect = (categoryId: string) => {
+    fetchProducts({ ...filters, categoryId })
   }
 
   const handleOpenModal = (product?: any) => {
@@ -105,6 +107,11 @@ const PageClient: React.FC = () => {
   const handleSaveProduct = async () => {
     await fetchProducts()
     handleCloseModal()
+  }
+
+  const handleCategoryUpdate = (updatedCategories: any) => {
+    console.log('Updated categories:', updatedCategories)
+    setProductCategories(updatedCategories)
   }
 
   if (loading) {
@@ -125,7 +132,6 @@ const PageClient: React.FC = () => {
           <Button variant="contained" onClick={() => handleOpenModal()}>
             Add Product
           </Button>
-          {/* {openModal ? <ProductAddEditModal /> : null} */}
         </div>
       </div>
 
@@ -157,7 +163,14 @@ const PageClient: React.FC = () => {
 
       <div className="flex space-x-5">
         <div className="p-5 w-1/5 border border-white">
-          <BasicSimpleTreeView categories={productCategories} />
+          <BasicSimpleTreeView
+            categories={productCategories}
+            onCategorySelect={handleCategorySelect}
+          />
+          {/* <CategoryTree
+            categories={productCategories.docs}
+            onCategoryUpdate={handleCategoryUpdate}
+          /> */}
         </div>
         <div className=" w-5/6">
           {loading ? (

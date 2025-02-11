@@ -12,6 +12,10 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import 'primereact/resources/themes/lara-light-indigo/theme.css' // Or another theme
+import 'primereact/resources/primereact.min.css'
+import 'primeicons/primeicons.css'
+import 'primereact/resources/themes/tailwind-light/theme.css'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'

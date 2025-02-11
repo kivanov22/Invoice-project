@@ -84,8 +84,23 @@
   }
 }
 
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr {
+  border-bottom: 1px solid var(--border) !important; /* Or use a color like #ddd */
+}
+
+/* Make sure gridlines are present for both horizontal and vertical */
+.p-datatable-gridlines .p-datatable-tbody > tr,
+.p-datatable-gridlines .p-datatable-thead > tr {
+  border-bottom: 1px solid #ddd !important; /* Adjust the color to match your theme */
+  border-right: 1px solid #ddd !important;
+}
+
+.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #f9f9f9 !important; /* Alternating row color */
+}
+
 @layer base {
-  * {
+  * :not(.p-datatable){
     @apply border-border;
   }
   body {

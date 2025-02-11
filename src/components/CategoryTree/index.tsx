@@ -13,9 +13,13 @@ interface Category {
 
 interface BasicSimpleTreeViewProps {
   categories: { docs: Category[] }
+  onCategorySelect: (categoryId: string) => void
 }
 
-const BasicSimpleTreeView: React.FC<BasicSimpleTreeViewProps> = ({ categories }) => {
+const BasicSimpleTreeView: React.FC<BasicSimpleTreeViewProps> = ({
+  categories,
+  onCategorySelect,
+}) => {
   // Convert flat list into hierarchical structure
   const buildTree = (categoriesList: Category[]) => {
     const categoryMap = new Map<string, Category>()
@@ -44,9 +48,11 @@ const BasicSimpleTreeView: React.FC<BasicSimpleTreeViewProps> = ({ categories })
   const renderTreeItems = (categories: Category[]) =>
     categories.map((category) => (
       <TreeItem
+        className="border border-white mb-2"
         key={category.id}
         itemId={category.id}
         label={`${category.title} (${category.productCount || 0})`}
+        // onClick={() => onCategorySelect(category.id)}
       >
         {category.children && category.children.length > 0 && renderTreeItems(category.children)}
       </TreeItem>

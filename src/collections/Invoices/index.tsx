@@ -36,6 +36,10 @@ export const Invoices: CollectionConfig = {
       name: 'cancellation',
       type: 'checkbox',
     },
+    {
+      name: 'isWithNomenclature',
+      type: 'checkbox',
+    },
   ],
   access: {
     read: () => true,

@@ -706,6 +706,7 @@ export interface Invoice {
   accountant?: string | null;
   invoicePayed?: boolean | null;
   cancellation?: boolean | null;
+  isWithNomenclature?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1330,6 +1331,7 @@ export interface InvoicesSelect<T extends boolean = true> {
   accountant?: T;
   invoicePayed?: T;
   cancellation?: T;
+  isWithNomenclature?: T;
   updatedAt?: T;
   createdAt?: T;
 }
