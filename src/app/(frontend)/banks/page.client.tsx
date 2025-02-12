@@ -74,13 +74,13 @@ const PageClient: React.FC = () => {
     <>
       <div className="container mb-16 flex  justify-between items-center">
         <div className="prose dark:prose-invert max-w-none ">
-          <h1 className="text-white">Banks</h1>
+          <h1 className="text-black dark:text-white">Banks</h1>
         </div>
         <div className="">
           <AddBankButton />
         </div>
       </div>
-      <div className="flex space-x-5 items-center border border-white p-5 mb-5">
+      <div className="flex space-x-5 items-center border border-black dark:border-white p-5 mb-5">
         <div className="flex flex-col flex-1">
           <BanksFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">

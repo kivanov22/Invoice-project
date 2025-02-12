@@ -126,7 +126,7 @@ const PageClient: React.FC = () => {
     <>
       <div className="container mb-16 flex  justify-between items-center">
         <div className="prose dark:prose-invert max-w-none ">
-          <h1 className="text-white">Products</h1>
+          <h1 className="text-black dark:text-white">Products</h1>
         </div>
         <div className="">
           <Button variant="contained" onClick={() => handleOpenModal()}>
@@ -142,7 +142,7 @@ const PageClient: React.FC = () => {
         product={selectedProduct}
       />
 
-      <div className="flex space-x-5 items-center border border-white p-5 mb-5">
+      <div className="flex space-x-5 items-center border border-black dark:border-white p-5 mb-5">
         <div className="flex flex-col flex-1">
           <ProductFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
@@ -162,7 +162,7 @@ const PageClient: React.FC = () => {
       </div>
 
       <div className="flex space-x-5">
-        <div className="p-5 w-1/5 border border-white">
+        <div className="p-5 w-1/5 border border-black dark:border-white">
           <BasicSimpleTreeView
             categories={productCategories}
             onCategorySelect={handleCategorySelect}

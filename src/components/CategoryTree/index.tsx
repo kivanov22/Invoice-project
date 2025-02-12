@@ -48,7 +48,7 @@ const BasicSimpleTreeView: React.FC<BasicSimpleTreeViewProps> = ({
   const renderTreeItems = (categories: Category[]) =>
     categories.map((category) => (
       <TreeItem
-        className="border border-white mb-2"
+        className="border border-black dark:border-white mb-2 text-black dark:text-white"
         key={category.id}
         itemId={category.id}
         label={`${category.title} (${category.productCount || 0})`}

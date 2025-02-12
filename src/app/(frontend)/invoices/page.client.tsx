@@ -1,24 +1,16 @@
 'use client'
-import BanksFilter from '@/components/Bank/bankFilter'
-import { AddBankButton } from '@/components/Bank/createButton'
 import { PageRange } from '@/components/PageRange'
-import BasicTable from '@/components/Table'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { Button, CircularProgress } from '@mui/material'
 import { Pagination } from '@payloadcms/ui'
 import React, { useCallback, useEffect, useState } from 'react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
-import CustomTable from '@/components/CustomTable'
-import BasicSimpleTreeView from '@/components/CategoryTree'
-import { CustomButton } from '@/components/common/Button'
-import CustomFilter from '@/components/Product/productFilter'
-import { Products } from '@/collections/Products'
-import ProductFilter from '@/components/Product/productFilter'
 import CircularWithValueLabel from '@/components/common/Loader'
-import ProductAddEditModal from '@/components/Product/productAddEditDialog'
-import CategoryTree from '@/components/Product/categoryTree/CategoryTree'
 import InvoiceList from '@/components/Invoice/invoiceList'
+import InvoiceNomenclature from '@/components/Invoice/invoiceNomenclature'
+import InvoiceNoNomenclature from '@/components/Invoice/invoiceNoNomenclature'
+import { set } from 'date-fns'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -28,29 +20,13 @@ const PageClient: React.FC = () => {
   }, [setHeaderTheme])
 
   const [filters, setFilters] = useState({ code: '', title: '', brand: '' })
-  const [products, setProducts] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+  const [invoices, setInvoices] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
-  const [productCategories, setProductCategories] = useState<any>({ docs: [] })
   const [openModal, setOpenModal] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
+  const [selectedInvoice, setSelectedInvoice] = useState<any | null>(null)
+  const [isWithNomenclature, setIsWithNomenclature] = useState(true)
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      //   const productCategories = await getProductCategories()
-      const response = await fetch('/api/categories')
-      const data = await response.json()
-      console.log('Check categories', data)
-      setProductCategories(data)
-    } catch (error) {
-      console.error('Error fetching categories:', error)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchCategories()
-  }, [fetchCategories])
-
-  const fetchProducts = useCallback(
+  const fetchInvoices = useCallback(
     async (filters?: { code?: string; title?: string; brand?: string; categoryId?: string }) => {
       setLoading(true)
 
@@ -62,16 +38,16 @@ const PageClient: React.FC = () => {
       if (filters?.categoryId) queryParams.append('where[category][equals]', filters.categoryId)
 
       const endPoint = queryParams.toString()
-        ? `/api/products?${queryParams.toString()}`
-        : '/api/products'
+        ? `/api/invoices?${queryParams.toString()}`
+        : '/api/invoices'
 
       try {
         const response = await fetch(endPoint) //'/api/products'
         const data = await response.json()
-        setProducts(data)
+        setInvoices(data)
       } catch (error) {
-        console.error('Failed to fetch banks:', error)
-        setProducts({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+        console.error('Failed to fetch Invoices:', error)
+        setInvoices({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
       } finally {
         setLoading(false)
       }
@@ -79,40 +55,36 @@ const PageClient: React.FC = () => {
     [],
   )
 
+  const handleChangeInvoiceNomenclature = (value: boolean) => {
+    setIsWithNomenclature(value)
+    setOpenModal(true)
+  }
+
   useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+    fetchInvoices()
+  }, [fetchInvoices])
 
   const handleClear = () => {
-    fetchProducts()
+    fetchInvoices()
   }
 
   const handleSearch = () => {
-    fetchProducts(filters)
-  }
-
-  const handleCategorySelect = (categoryId: string) => {
-    fetchProducts({ ...filters, categoryId })
+    fetchInvoices(filters)
   }
 
   const handleOpenModal = (product?: any) => {
-    setSelectedProduct(product || null)
+    setSelectedInvoice(product || null)
     setOpenModal(true)
   }
 
   const handleCloseModal = () => {
     setOpenModal(false)
-    setSelectedProduct(null)
+    setSelectedInvoice(null)
   }
 
   const handleSaveProduct = async () => {
-    await fetchProducts()
+    await fetchInvoices()
     handleCloseModal()
-  }
-
-  const handleCategoryUpdate = (updatedCategories: any) => {
-    console.log('Updated categories:', updatedCategories)
-    setProductCategories(updatedCategories)
   }
 
   if (loading) {
@@ -136,15 +108,39 @@ const PageClient: React.FC = () => {
         </div>
       </div>
 
-      <ProductAddEditModal
-        open={openModal}
-        onClose={handleCloseModal}
-        onSave={handleSaveProduct}
-        product={selectedProduct}
-      />
+      {isWithNomenclature ? (
+        <InvoiceNoNomenclature
+          open={openModal}
+          onClose={handleCloseModal}
+          onSave={handleSaveProduct}
+          invoice={selectedInvoice}
+        />
+      ) : (
+        <InvoiceNomenclature
+          open={openModal}
+          onClose={handleCloseModal}
+          onSave={handleSaveProduct}
+          invoice={selectedInvoice}
+        />
+      )}
 
       <div className="flex space-x-5 items-center border border-black p-5 mb-5 dark:border-white">
-        <div className="flex flex-col flex-1"></div>
+        <div className="flex  flex-1 gap-10">
+          <Button
+            variant="contained"
+            className="w-60"
+            onClick={() => handleChangeInvoiceNomenclature(false)}
+          >
+            AddWithNomenclature
+          </Button>
+          <Button
+            variant="outlined"
+            className="w-60"
+            onClick={() => handleChangeInvoiceNomenclature(true)}
+          >
+            AddWithoutNomenclature
+          </Button>
+        </div>
         <div className="flex justify-end space-x-5 p-10 flex-1">
           <Button variant="contained" onClick={handleSearch}>
             <FilterAltIcon />
@@ -177,15 +173,15 @@ const PageClient: React.FC = () => {
       <div className="container mb-8 mt-5 text-2xl">
         <PageRange
           collection="products"
-          currentPage={products.page}
+          currentPage={invoices.page}
           limit={12}
-          totalDocs={products.totalDocs}
+          totalDocs={invoices.totalDocs}
         />
       </div>
 
       <div className="container">
-        {products.totalPages > 1 && products.page && (
-          <Pagination page={products.page} totalPages={products.totalPages} />
+        {invoices.totalPages > 1 && invoices.page && (
+          <Pagination page={invoices.page} totalPages={invoices.totalPages} />
         )}
       </div>
     </>
