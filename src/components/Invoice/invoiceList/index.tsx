@@ -22,7 +22,9 @@ interface Invoice {
   isWithNomenclature: boolean
 }
 
-export default function InvoiceList() {
+interface InvoiceListProps {}
+
+const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -182,3 +184,5 @@ export default function InvoiceList() {
     </div>
   )
 }
+
+export default InvoiceList

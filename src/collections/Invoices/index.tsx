@@ -43,5 +43,6 @@ export const Invoices: CollectionConfig = {
   ],
   access: {
     read: () => true,
+    delete: () => true,
   },
 }

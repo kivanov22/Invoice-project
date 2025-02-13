@@ -16,7 +16,14 @@ import { DeleteBankButton } from '../Bank/deleteButton'
 import { Typography } from '@mui/material'
 import { format, isValid } from 'date-fns'
 
-export default function BasicTable({ banks, onEdit, onDelete }) {
+interface BasicTableProps {
+  banks: any
+  onEdit: any
+  onDelete: any
+}
+
+// /const CustomTable: React.FC<CustomTableProps> = ({ collection, onEdit, onDelete }) => {
+const BasicTable: React.FC<BasicTableProps> = ({ banks, onEdit, onDelete }) => {
   if (banks.length === 0) {
     return <Typography>No banks found.</Typography>
   }
@@ -92,7 +99,7 @@ export default function BasicTable({ banks, onEdit, onDelete }) {
                 >
                   Edit
                 </Button> */}
-                <DeleteBankButton bankId={bank.id} onDelete={onDelete}></DeleteBankButton>
+                <DeleteBankButton id={bank.id} onDelete={onDelete}></DeleteBankButton>
                 {/* <Button
                   variant="contained"
                   color="secondary"
@@ -109,3 +116,5 @@ export default function BasicTable({ banks, onEdit, onDelete }) {
     </TableContainer>
   )
 }
+
+export default BasicTable

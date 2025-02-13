@@ -78,6 +78,44 @@ const PageClient: React.FC = () => {
     [],
   )
 
+  const handleDelete = useCallback(
+    async (id: string) => {
+      console.log(`ProductId:${id}`)
+
+      const checkProductExists = async (id: string) => {
+        const response = await fetch(`/api/products/${id}`)
+        return response.ok
+      }
+
+      const exists = await checkProductExists(id)
+      if (!exists) {
+        console.error('Product does not exist or was already deleted.')
+        return
+      }
+
+      try {
+        const response = await fetch(`/api/products/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        })
+
+        const data = await response.json()
+        console.log('Delete response:', data)
+
+        if (response.ok) {
+          console.log('Product deleted')
+          // handleClose()
+          fetchProducts()
+        } else {
+          console.error('Failed to delete product')
+        }
+      } catch (error) {
+        console.error('Error deleting product:', error)
+      }
+    },
+    [fetchProducts],
+  )
+
   useEffect(() => {
     fetchProducts()
   }, [fetchProducts])
@@ -177,11 +215,7 @@ const PageClient: React.FC = () => {
             <CircularProgress />
           ) : (
             <div className="ml-4 mr-4">
-              <CustomTable
-                collection={products}
-                onEdit={handleOpenModal}
-                onDelete={fetchProducts}
-              />
+              <CustomTable collection={products} onEdit={handleOpenModal} onDelete={handleDelete} />
             </div>
           )}
         </div>

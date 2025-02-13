@@ -42,6 +42,7 @@ export const Products: CollectionConfig = {
   ],
   access: {
     read: () => true,
+    delete: () => true,
   },
   hooks: {
     afterChange: [

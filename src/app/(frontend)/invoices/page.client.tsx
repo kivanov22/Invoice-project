@@ -159,11 +159,6 @@ const PageClient: React.FC = () => {
             <CircularProgress />
           ) : (
             <div className="ml-4 mr-4">
-              {/* <CustomTable
-                collection={products}
-                onEdit={handleOpenModal}
-                onDelete={fetchProducts}
-              /> */}
               <InvoiceList />
             </div>
           )}

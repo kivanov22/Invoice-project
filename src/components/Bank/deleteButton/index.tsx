@@ -6,11 +6,11 @@ import AddBoxIcon from '@mui/icons-material/AddBox'
 import { DeleteIcon } from 'lucide-react'
 
 interface DeleteBankButtonProps {
-  bankId: string
+  id: string
   onDelete: () => void
 }
 
-export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ bankId, onDelete }) => {
+export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ id, onDelete }) => {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
@@ -23,9 +23,9 @@ export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ bankId, onDe
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/banks/${bankId}`, {
+      const response = await fetch(`/api/banks/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        // headers: { 'Content-Type': 'application/json' },
       })
 
       if (response.ok) {
