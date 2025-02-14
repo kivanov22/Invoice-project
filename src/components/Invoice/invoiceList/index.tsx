@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { classNames } from 'primereact/utils'
 import { FilterMatchMode } from 'primereact/api'
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
@@ -8,6 +8,9 @@ import { Checkbox } from 'primereact/checkbox'
 import { format } from 'date-fns'
 import { IconField } from 'primereact/iconfield'
 import { InputIcon } from 'primereact/inputicon'
+import { Dropdown } from 'primereact/dropdown'
+import { Button } from '@mui/material'
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
 
 interface Invoice {
   id: string
@@ -22,9 +25,12 @@ interface Invoice {
   isWithNomenclature: boolean
 }
 
-interface InvoiceListProps {}
+interface InvoiceListProps {
+  onEdit: (product?: any) => void
+  onDelete: (productId: string) => void
+}
 
-const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
+const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -37,6 +43,7 @@ const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
   })
   const [loading, setLoading] = useState<boolean>(true)
   const [globalFilterValue, setGlobalFilterValue] = useState<string>('')
+  const dt = useRef<DataTable<Invoice[]>>(null)
 
   useEffect(() => {
     async function fetchInvoices() {
@@ -53,6 +60,12 @@ const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
 
     fetchInvoices()
   }, [])
+
+  const exportCSV = () => {
+    if (dt.current) {
+      dt.current.exportCSV({ selectionOnly: false })
+    }
+  }
 
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -74,6 +87,11 @@ const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
           className="p-inputtext-sm text-center border border-gray-300"
         />
       </IconField>
+      <div style={{ textAlign: 'left' }}>
+        <Button variant="contained" color="primary" onClick={exportCSV}>
+          Export CSV
+        </Button>
+      </div>
     </div>
   )
 
@@ -93,10 +111,42 @@ const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
     <span>{format(new Date(rowData.invoiceDate), 'dd/MM/yyyy')}</span>
   )
 
+  // const onRowEditComplete = (e: any) => {
+  //   let { rowData, newValue, field } = e
+  //   alert(`Cell edited: ${field} = ${newValue}`)
+
+  //   if (newValue.trim().length === 0) {
+  //     return
+  //   }
+
+  //   console.log('RowData', rowData)
+
+  //   // Update the invoices list
+  //   let updatedInvoices = invoices.map((invoice) =>
+  //     invoice.id === rowData.id ? { ...invoice, [field]: newValue } : invoice,
+  //   )
+
+  //   setInvoices(updatedInvoices)
+  //   console.log('Updated Invoices:', updatedInvoices)
+  //   onEdit({ ...rowData, [field]: newValue })
+  // }
+
+  const deleteInvoice = (id: string) => {
+    confirmDialog({
+      message: 'Are you sure you want to delete this invoice?',
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        setInvoices((prev) => prev.filter((invoice) => invoice.id !== id))
+      },
+    })
+  }
+
   const bankBodyTemplate = (rowData: Invoice) => <span>{rowData.bank?.title || 'N/A'}</span>
 
   return (
     <div className="bg-white p-5 shadow-lg rounded-md">
+      <ConfirmDialog />
       <DataTable
         className="p-datatable-sm p-datatable-striped p-datatable-gridlines border border-gray-300 p-6 rounded-lg "
         value={invoices}
@@ -108,12 +158,26 @@ const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
         loading={loading}
         globalFilterFields={['title', 'mol', 'documentNumber', 'accountant']}
         header={renderHeader()}
+        // editMode="cell"
+        // onRowEditComplete={onRowEditComplete}
         emptyMessage="No invoices found."
+        ref={dt}
       >
         <Column
           field="title"
           header="Title"
           filter
+          // editor={(options) => (
+          //   <InputText
+          //     value={options.value}
+          //     onChange={(e) => {
+          //       const newValue = e.target.value
+          //       if (options.editorCallback) {
+          //         options.editorCallback(newValue) // ✅ Ensure callback is called
+          //       }
+          //     }}
+          //   />
+          // )}
           filterPlaceholder="Search by title"
           className="border-b-2 border-b-gray-300"
           style={{ minWidth: '12rem' }}
@@ -180,6 +244,33 @@ const InvoiceList: React.FC<InvoiceListProps> = ({}) => {
           style={{ minWidth: '10rem' }}
           className="border-b-2 border-b-gray-300 "
         />
+        <Column />
+        <Column
+          body={(rowData) => (
+            <div className="flex gap-2">
+              {/* Edit Button */}
+              <Button variant="contained" color="primary" onClick={() => onEdit(rowData)}>
+                Edit
+              </Button>
+
+              {/* Delete Button */}
+              <Button variant="contained" color="error" onClick={() => onDelete(rowData.id)}>
+                Delete
+              </Button>
+            </div>
+          )}
+          header="Actions"
+          style={{ width: '10rem' }}
+        />
+        {/* <Column
+          body={(rowData) => (
+            <Button variant="contained" color="error" onClick={() => onDelete(rowData.id)}>
+              Delete
+            </Button>
+          )}
+          header="Actions"
+          style={{ width: '10rem' }}
+        /> */}
       </DataTable>
     </div>
   )

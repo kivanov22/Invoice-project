@@ -12,6 +12,19 @@ import InvoiceNomenclature from '@/components/Invoice/invoiceNomenclature'
 import InvoiceNoNomenclature from '@/components/Invoice/invoiceNoNomenclature'
 import { set } from 'date-fns'
 
+interface Invoice {
+  id: string // Assuming it's a string, update if necessary
+  title: string
+  mol: string
+  bank: string
+  documentNumber: string
+  invoiceDate: string
+  accountant: string
+  invoicePayed: boolean
+  cancellation: boolean
+  isWithNomenclature: boolean
+}
+
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
 
@@ -20,10 +33,16 @@ const PageClient: React.FC = () => {
   }, [setHeaderTheme])
 
   const [filters, setFilters] = useState({ code: '', title: '', brand: '' })
-  const [invoices, setInvoices] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+  // const [invoices, setInvoices] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+  const [invoices, setInvoices] = useState<{
+    docs: Invoice[]
+    page: number
+    totalPages: number
+    totalDocs: number
+  }>({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
   const [openModal, setOpenModal] = useState(false)
-  const [selectedInvoice, setSelectedInvoice] = useState<any | null>(null)
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null)
   const [isWithNomenclature, setIsWithNomenclature] = useState(true)
 
   const fetchInvoices = useCallback(
@@ -72,8 +91,9 @@ const PageClient: React.FC = () => {
     fetchInvoices(filters)
   }
 
-  const handleOpenModal = (product?: any) => {
-    setSelectedInvoice(product || null)
+  const handleOpenModal = (invoice?: any) => {
+    console.log('Invoice:', invoice)
+    setSelectedInvoice(invoice || null)
     setOpenModal(true)
   }
 
@@ -82,10 +102,55 @@ const PageClient: React.FC = () => {
     setSelectedInvoice(null)
   }
 
-  const handleSaveProduct = async () => {
+  const handleSaveInvoice = async (updatedInvoice: any) => {
+    setInvoices((prevInvoices) => {
+      const updatedInvoices = prevInvoices.docs.map((invoice) =>
+        invoice.id === updatedInvoice.id ? updatedInvoice : invoice,
+      )
+      return { ...prevInvoices, docs: updatedInvoices }
+    })
+
     await fetchInvoices()
     handleCloseModal()
   }
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      console.log(`InvoiceId:${id}`)
+
+      const checkProductExists = async (id: string) => {
+        const response = await fetch(`/api/invoices/${id}`)
+        return response.ok
+      }
+
+      const exists = await checkProductExists(id)
+      if (!exists) {
+        console.error('Invoice does not exist or was already deleted.')
+        return
+      }
+
+      try {
+        const response = await fetch(`/api/invoices/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        })
+
+        const data = await response.json()
+        console.log('Delete response:', data)
+
+        if (response.ok) {
+          console.log('Invoice deleted')
+          // handleClose()
+          fetchInvoices()
+        } else {
+          console.error('Failed to delete invoice')
+        }
+      } catch (error) {
+        console.error('Error deleting invoice:', error)
+      }
+    },
+    [fetchInvoices],
+  )
 
   if (loading) {
     return (
@@ -112,14 +177,14 @@ const PageClient: React.FC = () => {
         <InvoiceNoNomenclature
           open={openModal}
           onClose={handleCloseModal}
-          onSave={handleSaveProduct}
+          onSave={handleSaveInvoice}
           invoice={selectedInvoice}
         />
       ) : (
         <InvoiceNomenclature
           open={openModal}
           onClose={handleCloseModal}
-          onSave={handleSaveProduct}
+          onSave={handleSaveInvoice}
           invoice={selectedInvoice}
         />
       )}
@@ -159,7 +224,7 @@ const PageClient: React.FC = () => {
             <CircularProgress />
           ) : (
             <div className="ml-4 mr-4">
-              <InvoiceList />
+              <InvoiceList onEdit={handleOpenModal} onDelete={handleDelete} />
             </div>
           )}
         </div>

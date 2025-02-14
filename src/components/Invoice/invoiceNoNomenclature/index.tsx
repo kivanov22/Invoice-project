@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Checkbox, MenuItem, Select, TextField } from '@mui/material'
 import { ProductCategories } from '@/collections/ProductCategories'
+import { Invoice } from '@/payload-types'
 
 const style = {
   display: 'flex',
@@ -25,7 +26,8 @@ const style = {
 interface InvoiceNoNomenclatureProps {
   open: boolean
   onClose: () => void
-  onSave: () => void
+  // onSave: () => void
+  onSave: (updatedInvoice: Invoice) => void
   invoice?: any | null
 }
 
@@ -97,7 +99,7 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
       if (response.ok) {
         const newInvoice = await response.json()
         console.log('Invoice created:', newInvoice)
-        onSave()
+        onSave(newInvoice)
         setFormData({
           title: '',
           mol: '',

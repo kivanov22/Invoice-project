@@ -4,6 +4,7 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Checkbox, MenuItem, Select, TextField } from '@mui/material'
+import { Invoice } from '@/payload-types'
 
 const style = {
   display: 'flex',
@@ -24,7 +25,8 @@ const style = {
 interface InvoiceNomenclatureProps {
   open: boolean
   onClose: () => void
-  onSave: () => void
+  onSave: (updatedInvoice: Invoice) => void
+  // onSave: () => void
   invoice?: any | null
 }
 
@@ -76,10 +78,22 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
   }, [invoice])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value, type, checked } = e.target
 
-    const newInvoice = { ...invoice, [name]: value } //last change
-    setFormData(newInvoice)
+    //const newInvoice = { ...invoice, [name]: value } //last change
+
+    if (type === 'checkbox') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked, // Update the checkbox values correctly
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
+    // setFormData(newInvoice)
   }
 
   const handleSubmit = async () => {
@@ -90,13 +104,13 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
       const response = await fetch(endPoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(invoice),
+        body: JSON.stringify(formData), //invoice
       })
 
       if (response.ok) {
         const newInvoice = await response.json()
-        console.log('Invoice created:', newInvoice)
-        onSave()
+        console.log('Invoice created or updated:', newInvoice)
+        onSave(newInvoice)
         setFormData({
           title: '',
           mol: '',
@@ -216,19 +230,25 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
               <Checkbox
                 name="invoicePayed"
                 checked={formData.invoicePayed}
-                onChange={(e) => setFormData((prev) => ({ ...prev, active: e.target.checked }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, invoicePayed: e.target.checked }))
+                }
               />
               <Typography sx={{ color: 'black', ml: 1 }}>Cancellation</Typography>
               <Checkbox
                 name="cancellation"
                 checked={formData.cancellation}
-                onChange={(e) => setFormData((prev) => ({ ...prev, active: e.target.checked }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, cancellation: e.target.checked }))
+                }
               />
               <Typography sx={{ color: 'black', ml: 1 }}>IsWithNomenclature</Typography>
               <Checkbox
                 name="isWithNomenclature"
                 checked={formData.isWithNomenclature}
-                onChange={(e) => setFormData((prev) => ({ ...prev, active: e.target.checked }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, isWithNomenclature: e.target.checked }))
+                }
               />
             </div>
             <div className="flex">
