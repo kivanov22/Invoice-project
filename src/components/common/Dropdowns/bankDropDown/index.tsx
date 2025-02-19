@@ -2,10 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown'
 import { Bank } from '@/payload-types'
 
-interface BankDropDownProps {}
+interface BankDropDownProps {
+  selectedBank: Bank | null
+  onBankChange: (bank: Bank | null) => void
+}
 
-const BankDropDown: React.FC<BankDropDownProps> = ({}) => {
-  const [selectedBank, setSelectedBank] = useState<Bank | null>(null)
+const BankDropDown: React.FC<BankDropDownProps> = ({ selectedBank, onBankChange }) => {
   const [banks, setBanks] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
 
@@ -17,6 +19,7 @@ const BankDropDown: React.FC<BankDropDownProps> = ({}) => {
     try {
       const response = await fetch(endPoint)
       const data = await response.json()
+      console.log('Dropdown data:', data)
       setBanks(data)
     } catch (error) {
       console.error('Failed to fetch banks:', error)
@@ -33,12 +36,20 @@ const BankDropDown: React.FC<BankDropDownProps> = ({}) => {
   return (
     <div className="card flex justify-content-center">
       <Dropdown
-        value={selectedBank}
-        onChange={(e: DropdownChangeEvent) => setSelectedBank(e.value)}
+        // value={banks.docs.find((bank) => bank.id === selectedBank?.id) || null}
+        value={selectedBank || null}
+        // onChange={(e: DropdownChangeEvent) => onBankChange(e.value)}
+        onChange={(e: DropdownChangeEvent) => {
+          console.log('Selected Bank:', e.value) // Debugging: Check if a value is being selected
+          onBankChange(e.value)
+        }}
+        // onChange={(e: DropdownChangeEvent) => setClickedBank(e.value)}
         options={banks.docs}
-        optionLabel="name"
+        optionLabel="title"
+        appendTo="self"
         placeholder="Select a Bank"
         className="w-full md:w-14rem"
+        loading={loading}
       />
     </div>
   )

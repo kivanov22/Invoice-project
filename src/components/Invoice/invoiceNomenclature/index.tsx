@@ -4,14 +4,10 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Checkbox, MenuItem, Select, TextField } from '@mui/material'
-import { Invoice } from '@/payload-types'
+import { Bank, Invoice } from '@/payload-types'
 import { format } from 'date-fns'
-import { Calendar } from 'primereact/calendar'
-import CalendarComponent from '@/components/Calendar'
-import CalendarMUI from '@/components/Calendarv2'
 import DateField from '@/components/Calendar'
 import BankDropDown from '@/components/common/Dropdowns/bankDropDown'
-// import { DateCalendar } from '@mui/x-date-pickers'
 
 const style = {
   display: 'flex',
@@ -44,10 +40,20 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
   invoice,
 }) => {
   //   const [open, setOpen] = useState(false)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string
+    mol: string
+    bank: Bank | null
+    documentNumber: string
+    invoiceDate: string
+    accountant: string
+    invoicePayed: boolean
+    cancellation: boolean
+    isWithNomenclature: boolean
+  }>({
     title: '',
     mol: '',
-    bank: '',
+    bank: null,
     documentNumber: '',
     invoiceDate: '',
     accountant: '',
@@ -61,7 +67,7 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
       setFormData({
         title: invoice.title,
         mol: invoice.mol,
-        bank: invoice.bank,
+        bank: invoice?.bank || null,
         documentNumber: invoice.documentNumber,
         accountant: invoice.accountant,
         invoiceDate: invoice.invoiceDate,
@@ -73,7 +79,7 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
       setFormData({
         title: '',
         mol: '',
-        bank: '',
+        bank: null,
         documentNumber: '',
         invoiceDate: '',
         accountant: '',
@@ -118,6 +124,15 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
     }
     console.log('After date update:', formData.invoiceDate)
   }
+  const handleBankChange = (bankObj: Bank | null) => {
+    console.log('✅ Bank object received in InvoiceNomenclature:', bankObj)
+    // const currentInvoice: Invoice = { ...invoice }
+    // currentInvoice.bank = bankObj
+    // currentInvoice.bank = bankObj ? bankObj.title : ''
+    // setFormData((prev) => ({ ...prev, bank: bankObj ? bankObj.title : '' }))
+
+    setFormData((prev) => ({ ...prev, bank: bankObj }))
+  }
 
   const handleSubmit = async () => {
     const endPoint = invoice ? `/api/invoices/${invoice.id}` : '/api/invoices'
@@ -132,7 +147,7 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
       const response = await fetch(endPoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData), //invoice
+        body: JSON.stringify(formData),
       })
 
       if (response.ok) {
@@ -142,7 +157,7 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
         setFormData({
           title: '',
           mol: '',
-          bank: '',
+          bank: null,
           documentNumber: '',
           invoiceDate: '',
           accountant: '',
@@ -197,7 +212,7 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
                 onChange={handleInputChange}
                 placeholder={`Enter MOL...`}
               />
-              <TextField
+              {/* <TextField
                 label="Bank"
                 name="bank"
                 variant="outlined"
@@ -205,8 +220,9 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
                 value={formData.bank}
                 onChange={handleInputChange}
                 placeholder={`Enter Bank...`}
-              />
-              <BankDropDown />
+              /> */}
+
+              <BankDropDown selectedBank={formData.bank} onBankChange={handleBankChange} />
             </div>
             <div className="flex  gap-5">
               <TextField
@@ -248,23 +264,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
                 placeholder={`Enter Accountant...`}
               />
             </div>
-
-            {/* <div className="flex flex-col w-full">
-              <Typography sx={{ color: 'black', mb: 1 }}>Category</Typography>
-              <Select
-                value={
-                  typeof formData.category === 'object' ? formData.category.id : formData.category
-                }
-                onChange={handleCategoryChange}
-                fullWidth
-              >
-                {categories.map((cat) => (
-                  <MenuItem key={cat.id} value={cat.id}>
-                    {cat.title}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div> */}
 
             <div className="flex flex-col">
               <Typography sx={{ color: 'black', ml: 1 }}>Invoice Payed</Typography>
