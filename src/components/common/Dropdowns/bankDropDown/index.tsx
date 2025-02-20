@@ -8,7 +8,17 @@ interface BankDropDownProps {
 }
 
 const BankDropDown: React.FC<BankDropDownProps> = ({ selectedBank, onBankChange }) => {
-  const [banks, setBanks] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+  const [banks, setBanks] = useState<{
+    docs: Bank[]
+    page: number
+    totalPages: number
+    totalDocs: number
+  }>({
+    docs: [],
+    page: 1,
+    totalPages: 1,
+    totalDocs: 0,
+  })
   const [loading, setLoading] = useState(true)
 
   const fetchBanks = useCallback(async () => {
@@ -36,14 +46,10 @@ const BankDropDown: React.FC<BankDropDownProps> = ({ selectedBank, onBankChange 
   return (
     <div className="card flex justify-content-center">
       <Dropdown
-        // value={banks.docs.find((bank) => bank.id === selectedBank?.id) || null}
-        value={selectedBank || null}
-        // onChange={(e: DropdownChangeEvent) => onBankChange(e.value)}
+        value={banks.docs.find((bank) => bank.id === selectedBank?.id) || null}
         onChange={(e: DropdownChangeEvent) => {
-          console.log('Selected Bank:', e.value) // Debugging: Check if a value is being selected
           onBankChange(e.value)
         }}
-        // onChange={(e: DropdownChangeEvent) => setClickedBank(e.value)}
         options={banks.docs}
         optionLabel="title"
         appendTo="self"

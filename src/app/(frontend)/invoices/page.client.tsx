@@ -92,7 +92,6 @@ const PageClient: React.FC = () => {
   }
 
   const handleOpenModal = (invoice?: any) => {
-    console.log('Invoice:', invoice)
     setSelectedInvoice(invoice || null)
     setOpenModal(true)
   }

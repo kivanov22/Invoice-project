@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
-import { Checkbox, MenuItem, Select, TextField } from '@mui/material'
+import { Checkbox, TextField } from '@mui/material'
 import { Bank, Invoice } from '@/payload-types'
 import { format } from 'date-fns'
 import DateField from '@/components/Calendar'
@@ -29,7 +29,6 @@ interface InvoiceNomenclatureProps {
   open: boolean
   onClose: () => void
   onSave: (updatedInvoice: Invoice) => void
-  // onSave: () => void
   invoice?: any | null
 }
 
@@ -39,7 +38,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
   onSave,
   invoice,
 }) => {
-  //   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState<{
     title: string
     mol: string
@@ -92,13 +90,11 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
-    console.log('checkbox', checked, type)
-    //const newInvoice = { ...invoice, [name]: value } //last change
 
     if (type === 'checkbox') {
       setFormData((prev) => ({
         ...prev,
-        [name]: checked, // Update the checkbox values correctly
+        [name]: checked,
       }))
     } else {
       setFormData((prev) => ({
@@ -106,8 +102,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
         [name]: value,
       }))
     }
-    console.log('Check form data:', formData)
-    // setFormData(newInvoice)
   }
 
   const handleDateChange = (value: Date) => {
@@ -115,22 +109,14 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
     //   ...prev,
     //   invoiceDate: value,
     // }))
-    console.log('Before date update:', formData.invoiceDate)
     if (value) {
       setFormData((prev: any) => ({
         ...prev,
         invoiceDate: format(value, 'yyyy-MM-dd'),
       }))
     }
-    console.log('After date update:', formData.invoiceDate)
   }
   const handleBankChange = (bankObj: Bank | null) => {
-    console.log('✅ Bank object received in InvoiceNomenclature:', bankObj)
-    // const currentInvoice: Invoice = { ...invoice }
-    // currentInvoice.bank = bankObj
-    // currentInvoice.bank = bankObj ? bankObj.title : ''
-    // setFormData((prev) => ({ ...prev, bank: bankObj ? bankObj.title : '' }))
-
     setFormData((prev) => ({ ...prev, bank: bankObj }))
   }
 
@@ -152,7 +138,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
 
       if (response.ok) {
         const newInvoice = await response.json()
-        console.log('Invoice created or updated:', newInvoice)
         onSave(newInvoice)
         setFormData({
           title: '',
@@ -212,15 +197,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
                 onChange={handleInputChange}
                 placeholder={`Enter MOL...`}
               />
-              {/* <TextField
-                label="Bank"
-                name="bank"
-                variant="outlined"
-                fullWidth
-                value={formData.bank}
-                onChange={handleInputChange}
-                placeholder={`Enter Bank...`}
-              /> */}
 
               <BankDropDown selectedBank={formData.bank} onBankChange={handleBankChange} />
             </div>
@@ -244,16 +220,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
                 />
               </div>
 
-              {/* <TextField
-                label="Invoice Date"
-                name="invoiceDate"
-                variant="outlined"
-                fullWidth
-                value={formData.invoiceDate}
-                onChange={handleInputChange}
-                placeholder={`Enter date...`}
-              /> */}
-
               <TextField
                 label="Accountant"
                 name="accountant"
@@ -270,25 +236,22 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
               <Checkbox
                 name="invoicePayed"
                 checked={formData.invoicePayed}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, invoicePayed: e.target.checked }))
-                }
+                onChange={handleInputChange}
+                // onChange={(e) =>
+                //   setFormData((prev) => ({ ...prev, invoicePayed: e.target.checked }))
+                // }
               />
               <Typography sx={{ color: 'black', ml: 1 }}>Cancellation</Typography>
               <Checkbox
                 name="cancellation"
                 checked={formData.cancellation}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, cancellation: e.target.checked }))
-                }
+                onChange={handleInputChange}
               />
               <Typography sx={{ color: 'black', ml: 1 }}>IsWithNomenclature</Typography>
               <Checkbox
                 name="isWithNomenclature"
                 checked={formData.isWithNomenclature}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, isWithNomenclature: e.target.checked }))
-                }
+                onChange={handleInputChange}
               />
             </div>
             <div className="flex">
