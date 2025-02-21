@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
@@ -10,12 +12,33 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
+import { useRouter } from 'next/navigation'
+import MenuIcon from '@mui/icons-material/Menu'
 
 export default function TemporaryDrawer({ navItems }: { navItems: any }) {
   const [open, setOpen] = React.useState(false)
+  const router = useRouter()
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen)
+  }
+
+  const handleNavigation = (text?: any) => {
+    let path = ''
+
+    if (text?.link?.type === 'custom') {
+      path = text.link.url
+    } else if (text?.link?.type === 'reference' && text.link.reference?.value?.slug) {
+      path = `/${text.link.reference.value.slug}`
+    }
+
+    if (!path) {
+      console.error('Navigation path is undefined for:', text)
+      return
+    }
+
+    router.push(path)
+    setOpen(false)
   }
 
   const DrawerList = (
@@ -23,20 +46,12 @@ export default function TemporaryDrawer({ navItems }: { navItems: any }) {
       <List>
         {navItems.navItems.map((text: any, index: number) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => handleNavigation(text)}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text.link.label} />
             </ListItemButton>
           </ListItem>
         ))}
-        {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))} */}
       </List>
       <Divider />
       <List>
@@ -53,8 +68,11 @@ export default function TemporaryDrawer({ navItems }: { navItems: any }) {
   )
 
   return (
-    <div>
-      <Button onClick={toggleDrawer(true)}>Open drawer</Button>
+    <div className="text-white dark:text-black">
+      <Button className="text-white" onClick={toggleDrawer(true)}>
+        <MenuIcon />
+        Menu
+      </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>

@@ -61,7 +61,7 @@ const PageClient: React.FC = () => {
         : '/api/invoices'
 
       try {
-        const response = await fetch(endPoint) //'/api/products'
+        const response = await fetch(endPoint)
         const data = await response.json()
         setInvoices(data)
       } catch (error) {

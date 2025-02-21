@@ -125,11 +125,6 @@ const InvoiceNomenclature: React.FC<InvoiceNomenclatureProps> = ({
     const method = invoice ? 'PUT' : 'POST'
 
     try {
-      // const dataToSubmit = {
-      //   ...formData,
-      //   invoiceDate: formData.invoiceDate ? formData.invoiceDate.toISOString() : null,
-      // };
-
       const response = await fetch(endPoint, {
         method,
         headers: { 'Content-Type': 'application/json' },

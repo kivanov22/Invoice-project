@@ -248,6 +248,7 @@ export const seed = async ({
     ),
   })
 
+  console.log(post1Doc)
   const post2Doc = await payload.create({
     collection: 'posts',
     depth: 0,
