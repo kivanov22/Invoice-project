@@ -205,27 +205,17 @@ const PageClient: React.FC = () => {
             AddWithoutNomenclature
           </Button>
         </div>
-        <div className="flex justify-end space-x-5 p-10 flex-1">
-          <Button variant="contained" onClick={handleSearch}>
-            <FilterAltIcon />
-            Filter
-          </Button>
-          <Button variant="outlined" onClick={handleClear}>
-            <ClearIcon />
-            Clear
-          </Button>
-        </div>
       </div>
 
-      <div className="flex space-x-5">
-        <div className="">
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <div className="ml-4 mr-4">
+      <div className="flex justify-center px-2 mx-auto">
+        <div className=" w-full flex justify-center items-center">
+          <div className="w-[90%] mx-auto">
+            {loading ? (
+              <CircularProgress />
+            ) : (
               <InvoiceList onEdit={handleOpenModal} onDelete={handleDelete} />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
