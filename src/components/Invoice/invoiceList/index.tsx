@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { classNames } from 'primereact/utils'
 import { FilterMatchMode } from 'primereact/api'
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
 import { Column } from 'primereact/column'
@@ -8,9 +7,9 @@ import { Checkbox } from 'primereact/checkbox'
 import { format } from 'date-fns'
 import { IconField } from 'primereact/iconfield'
 import { InputIcon } from 'primereact/inputicon'
-import { Dropdown } from 'primereact/dropdown'
 import { Button } from '@mui/material'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
+import * as XLSX from 'xlsx'
 
 interface Invoice {
   id: string
@@ -38,6 +37,8 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
     mol: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     documentNumber: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     accountant: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    invoiceDate: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    bank: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     invoicePayed: { value: null, matchMode: FilterMatchMode.EQUALS },
     cancellation: { value: null, matchMode: FilterMatchMode.EQUALS },
   })
@@ -67,6 +68,14 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
     }
   }
 
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(invoices)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Invoices')
+
+    XLSX.writeFile(workbook, 'Invoices.xlsx')
+  }
+
   const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setFilters((prev) => ({
@@ -91,6 +100,14 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
         <Button variant="contained" color="primary" onClick={exportCSV}>
           Export CSV
         </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={exportToExcel}
+          style={{ marginLeft: '10px' }}
+        >
+          Export to Excel
+        </Button>
       </div>
     </div>
   )
@@ -111,26 +128,6 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
     <span>{format(new Date(rowData.invoiceDate), 'dd/MM/yyyy')}</span>
   )
 
-  // const onRowEditComplete = (e: any) => {
-  //   let { rowData, newValue, field } = e
-  //   alert(`Cell edited: ${field} = ${newValue}`)
-
-  //   if (newValue.trim().length === 0) {
-  //     return
-  //   }
-
-  //   console.log('RowData', rowData)
-
-  //   // Update the invoices list
-  //   let updatedInvoices = invoices.map((invoice) =>
-  //     invoice.id === rowData.id ? { ...invoice, [field]: newValue } : invoice,
-  //   )
-
-  //   setInvoices(updatedInvoices)
-  //   console.log('Updated Invoices:', updatedInvoices)
-  //   onEdit({ ...rowData, [field]: newValue })
-  // }
-
   const deleteInvoice = (id: string) => {
     confirmDialog({
       message: 'Are you sure you want to delete this invoice?',
@@ -145,18 +142,19 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
   const bankBodyTemplate = (rowData: Invoice) => <span>{rowData.bank?.title || 'N/A'}</span>
 
   return (
-    <div className="bg-white p-5 shadow-lg rounded-md">
+    <div className="bg-white p-5 shadow-lg rounded-md ">
       <ConfirmDialog />
       <DataTable
         className="p-datatable-sm p-datatable-striped p-datatable-gridlines border border-gray-300 p-6 rounded-lg "
         value={invoices}
         paginator
         rows={10}
+        rowsPerPageOptions={[10, 50, 100]}
         dataKey="id"
         filters={filters}
         filterDisplay="row"
         loading={loading}
-        globalFilterFields={['title', 'mol', 'documentNumber', 'accountant']}
+        globalFilterFields={['title', 'mol', 'documentNumber', 'accountant', 'invoiceDate', 'bank']}
         header={renderHeader()}
         // editMode="cell"
         // onRowEditComplete={onRowEditComplete}
@@ -209,6 +207,8 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
         <Column
           field="invoiceDate"
           header="Date"
+          filter
+          filterPlaceholder="Search by Date"
           body={invoiceDateBodyTemplate}
           style={{ minWidth: '12rem' }}
           className="border-b-2 border-b-gray-300"
@@ -216,6 +216,8 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
         <Column
           field="bank"
           header="Bank"
+          filter
+          filterPlaceholder="Search by Bank"
           body={bankBodyTemplate}
           style={{ minWidth: '10rem' }}
           className="border-b-2 border-b-gray-300"
@@ -225,7 +227,7 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
           header="Paid"
           body={invoicePayedBodyTemplate}
           filter
-          style={{ minWidth: '10rem' }}
+          style={{ minWidth: '8rem' }}
           className="border-b-2 border-b-gray-300"
         />
         <Column
@@ -233,7 +235,7 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
           header="Canceled"
           body={cancellationBodyTemplate}
           filter
-          style={{ minWidth: '10rem' }}
+          style={{ minWidth: '8rem' }}
           className="border-b-2 border-b-gray-300"
         />
         <Column
