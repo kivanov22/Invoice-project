@@ -19,6 +19,7 @@ import 'primereact/resources/themes/tailwind-light/theme.css'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import SubFooter from '@/components/SubFooter'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -40,6 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
           <Header />
           {children}
+          <SubFooter />
           <Footer />
         </Providers>
       </body>
