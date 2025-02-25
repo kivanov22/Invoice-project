@@ -4,16 +4,14 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { Button, CircularProgress } from '@mui/material'
 import { Pagination } from '@payloadcms/ui'
 import React, { useCallback, useEffect, useState } from 'react'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import ClearIcon from '@mui/icons-material/Clear'
 import CircularWithValueLabel from '@/components/common/Loader'
 import InvoiceList from '@/components/Invoice/invoiceList'
 import InvoiceNomenclature from '@/components/Invoice/invoiceNomenclature'
 import InvoiceNoNomenclature from '@/components/Invoice/invoiceNoNomenclature'
-import { set } from 'date-fns'
+import { Menu, MenuItem } from '@mui/material'
 
 interface Invoice {
-  id: string // Assuming it's a string, update if necessary
+  id: string
   title: string
   mol: string
   bank: string
@@ -31,9 +29,7 @@ const PageClient: React.FC = () => {
   useEffect(() => {
     setHeaderTheme('light')
   }, [setHeaderTheme])
-
-  const [filters, setFilters] = useState({ code: '', title: '', brand: '' })
-  // const [invoices, setInvoices] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [invoices, setInvoices] = useState<{
     docs: Invoice[]
     page: number
@@ -83,19 +79,26 @@ const PageClient: React.FC = () => {
     fetchInvoices()
   }, [fetchInvoices])
 
-  const handleClear = () => {
-    fetchInvoices()
-  }
-
-  const handleSearch = () => {
-    fetchInvoices(filters)
-  }
-
   const handleOpenModal = (invoice?: any) => {
     setSelectedInvoice(invoice || null)
     setOpenModal(true)
   }
 
+  //TEST
+  const handleOpenDropdown = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleCloseDropdown = () => {
+    setAnchorEl(null)
+  }
+
+  const handleSelectInvoiceType = (type: boolean) => {
+    setIsWithNomenclature(type)
+    setOpenModal(true)
+    handleCloseDropdown()
+  }
+  ///
   const handleCloseModal = () => {
     setOpenModal(false)
     setSelectedInvoice(null)
@@ -161,16 +164,7 @@ const PageClient: React.FC = () => {
 
   return (
     <>
-      <div className="container mb-16 flex  justify-between items-center ">
-        <div className="prose dark:prose-invert max-w-none ">
-          <h1 className="text-black dark:text-white">Invoices</h1>
-        </div>
-        <div className="">
-          <Button variant="contained" onClick={() => handleOpenModal()}>
-            Add Invoice
-          </Button>
-        </div>
-      </div>
+      <div className="container mb-16 flex flex-end items-center "></div>
 
       {isWithNomenclature ? (
         <InvoiceNoNomenclature
@@ -189,27 +183,41 @@ const PageClient: React.FC = () => {
       )}
 
       <div className="flex space-x-5 items-center border border-black p-5 mb-5 dark:border-white">
-        <div className="flex  flex-1 gap-10">
-          <Button
-            variant="contained"
-            className="w-60"
-            onClick={() => handleChangeInvoiceNomenclature(false)}
-          >
-            AddWithNomenclature
-          </Button>
-          <Button
-            variant="outlined"
-            className="w-60"
-            onClick={() => handleChangeInvoiceNomenclature(true)}
-          >
-            AddWithoutNomenclature
-          </Button>
+        <div className="flex  flex-1 gap-10 items-center">
+          <div className="mb-3">
+            <h1 className="ml-10 text-3xl text-black dark:text-white font-bold">Invoices</h1>
+          </div>
+          <div className="container mb-7 mt-5 text-2xl">
+            <PageRange
+              collection="invoices"
+              currentPage={invoices.page}
+              limit={12}
+              totalDocs={invoices.totalDocs}
+            />
+          </div>
+
+          <div className="container">
+            {invoices.totalPages > 1 && invoices.page && (
+              <Pagination page={invoices.page} totalPages={invoices.totalPages} />
+            )}
+          </div>
+          <div className="mr-10 ">
+            <Button variant="contained" onClick={handleOpenDropdown} className="p-3">
+              Add Invoice
+            </Button>
+            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseDropdown}>
+              <MenuItem onClick={() => handleSelectInvoiceType(false)}>With Nomenclature</MenuItem>
+              <MenuItem onClick={() => handleSelectInvoiceType(true)}>
+                Without Nomenclature
+              </MenuItem>
+            </Menu>
+          </div>
         </div>
       </div>
 
       <div className="flex justify-center px-2 mx-auto">
         <div className=" w-full flex justify-center items-center">
-          <div className="w-[90%] mx-auto">
+          <div className="w-[90%] mx-auto ">
             {loading ? (
               <CircularProgress />
             ) : (
@@ -217,21 +225,6 @@ const PageClient: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="container mb-8 mt-5 text-2xl">
-        <PageRange
-          collection="products"
-          currentPage={invoices.page}
-          limit={12}
-          totalDocs={invoices.totalDocs}
-        />
-      </div>
-
-      <div className="container">
-        {invoices.totalPages > 1 && invoices.page && (
-          <Pagination page={invoices.page} totalPages={invoices.totalPages} />
-        )}
       </div>
     </>
   )
