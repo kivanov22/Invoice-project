@@ -38,4 +38,5 @@ export const Banks: CollectionConfig = {
       type: 'date',
     },
   ],
+  timestamps: true,
 }

@@ -47,4 +47,5 @@ export const Invoices: CollectionConfig = {
     update: () => true,
     delete: () => true,
   },
+  timestamps: true,
 }

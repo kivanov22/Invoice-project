@@ -40,8 +40,11 @@ export const Products: CollectionConfig = {
       required: true,
     },
   ],
+  timestamps: true,
   access: {
     read: () => true,
+    create: () => true,
+    update: () => true,
     delete: () => true,
   },
   hooks: {
