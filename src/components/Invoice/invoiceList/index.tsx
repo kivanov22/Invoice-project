@@ -145,7 +145,7 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
     <div className="bg-white p-5 shadow-lg rounded-md ">
       <ConfirmDialog />
       <DataTable
-        className="p-datatable-sm p-datatable-striped p-datatable-gridlines border border-gray-300 p-6 rounded-lg "
+        className="p-datatable-sm p-datatable-striped p-datatable-gridlines border border-gray-300 p-6 rounded-lg"
         value={invoices}
         paginator
         rows={10}

@@ -32,12 +32,18 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
   return (
     <header className="container relative z-20   " {...(theme ? { 'data-theme': theme } : {})}>
-      <div className="py-8 flex justify-between">
-        <TemporaryDrawer navItems={data} />
-        <Link href="/">
-          <Logo loading="eager" priority="high" className="invert dark:invert-0" />
-        </Link>
+      <div className="py-8 flex justify-evenly items-center">
+        <div className="">
+          <TemporaryDrawer navItems={data} />
+        </div>
+        <div className="flex items-center gap-5">
+          <Link href="/">
+            <Logo loading="eager" priority="high" className="w-20 h-20" />
+          </Link>
+          <h1 className="text-3xl">Extreme Consulting</h1>
+        </div>
         <HeaderNav data={data} />
+        <div>{/* User logic icon,email and dropdown for register,logout */}</div>
       </div>
     </header>
   )
