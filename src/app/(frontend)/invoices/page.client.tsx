@@ -9,6 +9,7 @@ import InvoiceList from '@/components/Invoice/invoiceList'
 import InvoiceNomenclature from '@/components/Invoice/invoiceNomenclature'
 import InvoiceNoNomenclature from '@/components/Invoice/invoiceNoNomenclature'
 import { Menu, MenuItem } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 interface Invoice {
   id: string
@@ -40,6 +41,7 @@ const PageClient: React.FC = () => {
   const [openModal, setOpenModal] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null)
   const [isWithNomenclature, setIsWithNomenclature] = useState(true)
+  const { t } = useTranslation()
 
   const fetchInvoices = useCallback(
     async (filters?: { code?: string; title?: string; brand?: string; categoryId?: string }) => {
@@ -185,7 +187,7 @@ const PageClient: React.FC = () => {
       <div className="flex space-x-5 items-center border border-black p-5 mb-5 dark:border-white">
         <div className="flex  flex-1 gap-10 items-center">
           <div className="mb-3">
-            <h1 className="ml-10 text-3xl text-black dark:text-white font-bold">Invoices</h1>
+            <h1 className="ml-10 text-3xl text-black dark:text-white font-bold">{t('Invoice')}</h1>
           </div>
           <div className="container mb-7 mt-5 text-2xl">
             <PageRange
