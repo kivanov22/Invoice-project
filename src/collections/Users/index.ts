@@ -6,10 +6,14 @@ export const Users: CollectionConfig = {
   slug: 'users',
   access: {
     admin: authenticated,
-    create: authenticated,
-    delete: authenticated,
-    read: authenticated,
-    update: authenticated,
+    // create: authenticated,
+    // delete: authenticated,
+    // read: authenticated,
+    // update: authenticated,
+    read: () => true,
+    create: () => true,
+    update: () => true,
+    delete: () => true,
   },
   admin: {
     defaultColumns: ['name', 'email'],
