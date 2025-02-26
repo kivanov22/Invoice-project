@@ -68,9 +68,9 @@ export default function TemporaryDrawer({ navItems }: { navItems: any }) {
   )
 
   return (
-    <div className="text-black dark:text-white ">
-      <Button className="text-black dark:text-white" onClick={toggleDrawer(true)}>
-        <MenuIcon className="text-black" />
+    <div className="text-white dark:text-black ">
+      <Button className="text-white dark:text-black" onClick={toggleDrawer(true)}>
+        <MenuIcon className="text-white" />
         <span className="text-black dark:text-white">Menu</span>
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
