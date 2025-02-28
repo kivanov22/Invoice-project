@@ -205,12 +205,14 @@ const PageClient: React.FC = () => {
           </div>
           <div className="mr-10 ">
             <Button variant="contained" onClick={handleOpenDropdown} className="p-3">
-              Add Invoice
+              {t('Add Invoice')}
             </Button>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseDropdown}>
-              <MenuItem onClick={() => handleSelectInvoiceType(false)}>With Nomenclature</MenuItem>
+              <MenuItem onClick={() => handleSelectInvoiceType(false)}>
+                {t('Nomenclature')}
+              </MenuItem>
               <MenuItem onClick={() => handleSelectInvoiceType(true)}>
-                Without Nomenclature
+                {t('WithoutNomenclature')}
               </MenuItem>
             </Menu>
           </div>

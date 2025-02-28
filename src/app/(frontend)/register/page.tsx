@@ -1,7 +1,6 @@
 import type { Metadata } from 'next/types'
 import React from 'react'
 import PageClient from './page.client'
-import { getMeUser } from '@/utilities/getMeUser'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
@@ -16,6 +15,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Login`,
+    title: `Payload Website Template Register`,
   }
 }

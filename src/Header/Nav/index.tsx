@@ -32,16 +32,16 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
         return <CMSLink key={i} {...link} appearance="link" />
       })}
       <Link href="/search">
-        <span className="sr-only">Search</span>
+        <span className="sr-only text-white dark:text-black">Search</span>
         <SearchIcon className="w-5 text-primary" />
       </Link>
-      <Typography>EN</Typography>
+      <Typography sx={{ color: 'white', dark: { color: 'black' } }}>EN</Typography>
       <Switch
         checked={checked}
         onChange={handleChange}
         inputProps={{ 'aria-label': 'controlled' }}
       />
-      <Typography>BG</Typography>
+      <Typography sx={{ color: 'white', dark: { color: 'black' } }}>BG</Typography>
     </nav>
   )
 }

@@ -23,34 +23,28 @@ const PageClient: React.FC = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
+      credentials: 'include',
     })
+
+    const data = await res.json()
+    console.log('Check response', data)
 
     if (!res.ok) {
       setError('Invalid credentials')
       return
     }
 
-    router.push('/') // Redirect after login
+    localStorage.setItem('user', JSON.stringify(data.user))
+
+    router.push('/')
   }
 
   return (
     <>
-      {/*
-            This example requires updating your template:
-    
-            ```
-            <html class="h-full bg-white">
-            <body class="h-full">
-            ```
-          */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: 'red', textAlign: 'center', fontSize: '15px' }}>{error}</p>}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            alt="Your Company"
-            src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-10 w-auto"
-          />
+          <img alt="Your Company" src="./images.png" className="mx-auto h-10 w-auto" />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>
@@ -114,7 +108,7 @@ const PageClient: React.FC = () => {
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Not a member?{' '}
             <Link
-              href="#
+              href="
             /register"
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
@@ -128,25 +122,3 @@ const PageClient: React.FC = () => {
 }
 
 export default PageClient
-
-// <div>
-//   <h2>Login</h2>
-//   {error && <p style={{ color: 'red' }}>{error}</p>}
-//   <form onSubmit={handleSubmit}>
-//     <input
-//       type="email"
-//       value={email}
-//       onChange={(e) => setEmail(e.target.value)}
-//       placeholder="Email"
-//       required
-//     />
-//     <input
-//       type="password"
-//       value={password}
-//       onChange={(e) => setPassword(e.target.value)}
-//       placeholder="Password"
-//       required
-//     />
-//     <button type="submit">Login</button>
-//   </form>
-// </div>

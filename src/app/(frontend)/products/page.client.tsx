@@ -11,13 +11,12 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
 import CustomTable from '@/components/CustomTable'
 import BasicSimpleTreeView from '@/components/CategoryTree'
-import { CustomButton } from '@/components/common/Button'
-import CustomFilter from '@/components/Product/productFilter'
 import { Products } from '@/collections/Products'
 import ProductFilter from '@/components/Product/productFilter'
 import CircularWithValueLabel from '@/components/common/Loader'
 import ProductAddEditModal from '@/components/Product/productAddEditDialog'
 import CategoryTree from '@/components/Product/categoryTree/CategoryTree'
+// import NewCategoryTree from '@/components/NewCategoryTre'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -205,6 +204,9 @@ const PageClient: React.FC = () => {
             categories={productCategories}
             onCategorySelect={handleCategorySelect}
           />
+          {/* <NewCategoryTree categories={productCategories}
+            onCategorySelect={handleCategorySelect}/> */}
+
           {/* <CategoryTree
             categories={productCategories.docs}
             onCategoryUpdate={handleCategoryUpdate}
