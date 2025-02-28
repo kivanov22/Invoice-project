@@ -16,7 +16,7 @@ export const Users: CollectionConfig = {
     delete: () => true,
   },
   admin: {
-    defaultColumns: ['name', 'email'],
+    defaultColumns: ['name', 'email', 'role', 'createdOn'],
     useAsTitle: 'name',
   },
   auth: true,
@@ -24,6 +24,24 @@ export const Users: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
+    },
+    {
+      name: 'email',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'password',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'confirmPassword',
+      type: 'text',
+    },
+    {
+      name: 'createdOn',
+      type: 'date',
     },
     {
       name: 'role',
