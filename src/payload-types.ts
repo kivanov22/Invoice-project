@@ -380,6 +380,9 @@ export interface Category {
 export interface User {
   id: string;
   name?: string | null;
+  password: string | null;
+  confirmPassword?: string | null;
+  createdOn?: string | null;
   role: 'admin' | 'user';
   updatedAt: string;
   createdAt: string;
@@ -390,7 +393,6 @@ export interface User {
   hash?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
-  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1350,6 +1352,9 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  password?: T;
+  confirmPassword?: T;
+  createdOn?: T;
   role?: T;
   updatedAt?: T;
   createdAt?: T;
