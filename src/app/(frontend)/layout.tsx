@@ -20,7 +20,7 @@ import 'primereact/resources/themes/tailwind-light/theme.css'
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import SubFooter from '@/components/SubFooter'
-// import SubNavigation from '../../components/SubNavigation/index'
+import SubNavigation from '@/components/SubNavigation'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
           <Header />
-          {/* <SubNavigation /> */}
+          <SubNavigation />
           {children}
           <SubFooter />
           <Footer />
