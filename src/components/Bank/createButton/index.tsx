@@ -3,11 +3,12 @@
 import React, { useState } from 'react'
 import { Button, Modal, Box, TextField, Typography } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
+import { useTranslation } from 'react-i18next'
 
 export const AddBankButton: React.FC = () => {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({ title: '', iban: '', bic: '', slug: '' })
-
+  const { t } = useTranslation()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -41,7 +42,7 @@ export const AddBankButton: React.FC = () => {
   return (
     <>
       <Button variant="contained" color="secondary" size="small" onClick={handleOpen}>
-        Add Bank
+        {t('Add Bank')}
         <AddBoxIcon />
       </Button>
 
@@ -60,7 +61,7 @@ export const AddBankButton: React.FC = () => {
           }}
         >
           <Typography variant="h6" component="h2" mb={2}>
-            Add New Bank
+            {t('Add New Bank')}
           </Typography>
 
           <TextField
@@ -98,10 +99,10 @@ export const AddBankButton: React.FC = () => {
 
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="outlined" onClick={handleClose}>
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Save
+              {t('Save')}
             </Button>
           </Box>
         </Box>

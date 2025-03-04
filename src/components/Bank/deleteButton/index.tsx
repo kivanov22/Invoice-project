@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import { Button, Modal, Box, TextField, Typography } from '@mui/material'
-import AddBoxIcon from '@mui/icons-material/AddBox'
 import { DeleteIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface DeleteBankButtonProps {
   id: string
@@ -12,7 +12,7 @@ interface DeleteBankButtonProps {
 
 export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ id, onDelete }) => {
   const [open, setOpen] = useState(false)
-
+  const { t } = useTranslation()
   const handleOpen = () => {
     setOpen(true)
   }
@@ -25,13 +25,12 @@ export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ id, onDelete
     try {
       const response = await fetch(`/api/banks/${id}`, {
         method: 'DELETE',
-        // headers: { 'Content-Type': 'application/json' },
       })
 
       if (response.ok) {
         console.log('Bank deleted')
         handleClose()
-        onDelete() // Refresh the bank list after deletion
+        onDelete()
       } else {
         console.error('Failed to delete bank')
       }
@@ -49,7 +48,7 @@ export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ id, onDelete
         size="small"
         onClick={handleOpen}
       >
-        DELETE
+        {t('Delete')}
         <DeleteIcon />
       </Button>
 
@@ -68,15 +67,15 @@ export const DeleteBankButton: React.FC<DeleteBankButtonProps> = ({ id, onDelete
           }}
         >
           <Typography variant="h6" component="h2" mb={2}>
-            Are you sure you want to delete this bank?
+            {t('Are you sure you want to delete this bank?')}
           </Typography>
 
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="outlined" onClick={handleClose}>
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button variant="contained" color="error" onClick={handleDelete}>
-              Delete
+              {t('Delete')}
             </Button>
           </Box>
         </Box>

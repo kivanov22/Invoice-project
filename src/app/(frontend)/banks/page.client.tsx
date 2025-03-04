@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
 import CircularWithValueLabel from '@/components/common/Loader'
+import { useTranslation } from 'react-i18next'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -21,6 +22,7 @@ const PageClient: React.FC = () => {
   const [filters, setFilters] = useState({ title: '', iban: '', bic: '' })
   const [banks, setBanks] = useState({ docs: [], page: 1, totalPages: 1, totalDocs: 0 })
   const [loading, setLoading] = useState(true)
+  const { t } = useTranslation()
 
   const fetchBanks = useCallback(async (filters?: { title: string; iban: string; bic: string }) => {
     setLoading(true)
@@ -74,7 +76,7 @@ const PageClient: React.FC = () => {
     <>
       <div className="container mb-16 flex  justify-between items-center">
         <div className="prose dark:prose-invert max-w-none ">
-          <h1 className="text-black dark:text-white">Banks</h1>
+          <h1 className="text-black dark:text-white">{t('Banks')}</h1>
         </div>
         <div className="">
           <AddBankButton />
@@ -84,17 +86,19 @@ const PageClient: React.FC = () => {
         <div className="flex flex-col flex-1">
           <BanksFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
-            <p className="text-4xl">Results:{banks.docs.length}</p>
+            <p className="text-4xl">
+              {t('Results')}:{banks.docs.length}
+            </p>
           </div>
         </div>
         <div className="flex justify-end space-x-5 p-10 flex-1">
           <Button variant="contained" onClick={handleSearch}>
             <FilterAltIcon />
-            Filter
+            {t('Filter')}
           </Button>
           <Button variant="outlined" onClick={handleClear}>
             <ClearIcon />
-            Clear
+            {t('Clear')}
           </Button>
         </div>
       </div>

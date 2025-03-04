@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('')
@@ -10,6 +11,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,7 +42,7 @@ const RegisterPage = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img alt="Your Company" src="./images.png" className="mx-auto h-10 w-auto" />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Register account
+            {t('Register account')}
           </h2>
         </div>
 
@@ -48,7 +50,7 @@ const RegisterPage = () => {
           <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Email address
+                {t('Email')}
               </label>
               <div className="mt-2">
                 <input
@@ -67,11 +69,11 @@ const RegisterPage = () => {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  Password
+                  {t('Password')}
                 </label>
                 <div className="text-sm">
                   <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
+                    {t('Forgot password')}?
                   </a>
                 </div>
               </div>
@@ -92,7 +94,7 @@ const RegisterPage = () => {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  Confirm Password
+                  {t('Confirm Password')}
                 </label>
               </div>
               <div className="mt-2">
@@ -114,19 +116,19 @@ const RegisterPage = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Register
+                {t('Register')}
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Already a member?{' '}
+            {t('Already a member')}?{' '}
             <Link
               href="#
             /register"
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
-              Login here
+              {t('Login')}
             </Link>
           </p>
         </div>

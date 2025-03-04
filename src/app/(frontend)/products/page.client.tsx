@@ -1,8 +1,5 @@
 'use client'
-import BanksFilter from '@/components/Bank/bankFilter'
-import { AddBankButton } from '@/components/Bank/createButton'
 import { PageRange } from '@/components/PageRange'
-import BasicTable from '@/components/Table'
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { Button, CircularProgress } from '@mui/material'
 import { Pagination } from '@payloadcms/ui'
@@ -11,11 +8,11 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
 import CustomTable from '@/components/CustomTable'
 import BasicSimpleTreeView from '@/components/CategoryTree'
-import { Products } from '@/collections/Products'
 import ProductFilter from '@/components/Product/productFilter'
 import CircularWithValueLabel from '@/components/common/Loader'
 import ProductAddEditModal from '@/components/Product/productAddEditDialog'
-import CategoryTree from '@/components/Product/categoryTree/CategoryTree'
+import { useTranslation } from 'react-i18next'
+// import CategoryTree from '@/components/Product/categoryTree/CategoryTree'
 // import NewCategoryTree from '@/components/NewCategoryTre'
 
 const PageClient: React.FC = () => {
@@ -31,6 +28,7 @@ const PageClient: React.FC = () => {
   const [productCategories, setProductCategories] = useState<any>({ docs: [] })
   const [openModal, setOpenModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
+  const { t } = useTranslation()
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -163,11 +161,11 @@ const PageClient: React.FC = () => {
     <>
       <div className="container mb-16 flex  justify-between items-center">
         <div className="prose dark:prose-invert max-w-none ">
-          <h1 className="text-black dark:text-white">Products</h1>
+          <h1 className="text-black dark:text-white">{t('Products')}</h1>
         </div>
         <div className="">
           <Button variant="contained" onClick={() => handleOpenModal()}>
-            Add Product
+            {t('Add Product')}
           </Button>
         </div>
       </div>
@@ -183,17 +181,19 @@ const PageClient: React.FC = () => {
         <div className="flex flex-col flex-1">
           <ProductFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
-            <p className="text-4xl">Results:{products.docs.length}</p>
+            <p className="text-4xl">
+              {t('Results')}:{products.docs.length}
+            </p>
           </div>
         </div>
         <div className="flex justify-end space-x-5 p-10 flex-1">
           <Button variant="contained" onClick={handleSearch}>
             <FilterAltIcon />
-            Filter
+            {t('Filter')}
           </Button>
           <Button variant="outlined" onClick={handleClear}>
             <ClearIcon />
-            Clear
+            {t('Clear')}
           </Button>
         </div>
       </div>

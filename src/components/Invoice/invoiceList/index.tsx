@@ -10,6 +10,7 @@ import { InputIcon } from 'primereact/inputicon'
 import { Button } from '@mui/material'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
 import * as XLSX from 'xlsx'
+import { useTranslation } from 'react-i18next'
 
 interface Invoice {
   id: string
@@ -45,6 +46,7 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
   const [loading, setLoading] = useState<boolean>(true)
   const [globalFilterValue, setGlobalFilterValue] = useState<string>('')
   const dt = useRef<DataTable<Invoice[]>>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     async function fetchInvoices() {
@@ -165,17 +167,6 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
           field="title"
           header="Title"
           filter
-          // editor={(options) => (
-          //   <InputText
-          //     value={options.value}
-          //     onChange={(e) => {
-          //       const newValue = e.target.value
-          //       if (options.editorCallback) {
-          //         options.editorCallback(newValue) // ✅ Ensure callback is called
-          //       }
-          //     }}
-          //   />
-          // )}
           filterPlaceholder="Search by title"
           className="border-b-2 border-b-gray-300"
           style={{ minWidth: '12rem' }}
@@ -250,29 +241,18 @@ const InvoiceList: React.FC<InvoiceListProps> = ({ onEdit, onDelete }) => {
         <Column
           body={(rowData) => (
             <div className="flex gap-2">
-              {/* Edit Button */}
               <Button variant="contained" color="primary" onClick={() => onEdit(rowData)}>
-                Edit
+                {t('Edit')}
               </Button>
 
-              {/* Delete Button */}
               <Button variant="contained" color="error" onClick={() => onDelete(rowData.id)}>
-                Delete
+                {t('Delete')}
               </Button>
             </div>
           )}
           header="Actions"
           style={{ width: '10rem' }}
         />
-        {/* <Column
-          body={(rowData) => (
-            <Button variant="contained" color="error" onClick={() => onDelete(rowData.id)}>
-              Delete
-            </Button>
-          )}
-          header="Actions"
-          style={{ width: '10rem' }}
-        /> */}
       </DataTable>
     </div>
   )

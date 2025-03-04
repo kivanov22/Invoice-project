@@ -3,17 +3,17 @@
 import React, { useState } from 'react'
 import { Button, Modal, Box, TextField, Typography } from '@mui/material'
 import AddBoxIcon from '@mui/icons-material/AddBox'
+import { useTranslation } from 'react-i18next'
 
 interface EditBankButtonProps {
   bankId: string
   onEdit: () => void
-  //   refreshBanks: () => void
 }
 
 export const EditBankButton: React.FC<EditBankButtonProps> = ({ bankId, onEdit }) => {
-  //refreshBanks
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({ title: '', iban: '', bic: '', slug: '' })
+  const { t } = useTranslation()
 
   const handleOpen = async () => {
     setOpen(true)
@@ -74,7 +74,7 @@ export const EditBankButton: React.FC<EditBankButtonProps> = ({ bankId, onEdit }
         size="small"
         onClick={handleOpen}
       >
-        EDIT
+        {t('Edit')}
         <AddBoxIcon />
       </Button>
 
@@ -93,7 +93,7 @@ export const EditBankButton: React.FC<EditBankButtonProps> = ({ bankId, onEdit }
           }}
         >
           <Typography variant="h6" component="h2" mb={2}>
-            EDIT
+            {t('Edit')}
           </Typography>
 
           <TextField
@@ -131,10 +131,10 @@ export const EditBankButton: React.FC<EditBankButtonProps> = ({ bankId, onEdit }
 
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button variant="outlined" onClick={handleClose}>
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Save
+              {t('Save')}
             </Button>
           </Box>
         </Box>

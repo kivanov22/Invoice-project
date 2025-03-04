@@ -8,6 +8,7 @@ import { Bank, Invoice } from '@/payload-types'
 import DateField from '@/components/Calendar'
 import BankDropDown from '@/components/common/Dropdowns/bankDropDown'
 import { format } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 const style = {
   display: 'flex',
@@ -59,6 +60,7 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
     cancellation: false,
     isWithNomenclature: false,
   })
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (invoice) {
@@ -122,11 +124,6 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
     const method = invoice ? 'PUT' : 'POST'
 
     try {
-      // const dataToSubmit = {
-      //   ...formData,
-      //   invoiceDate: formData.invoiceDate ? formData.invoiceDate.toISOString() : null,
-      // };
-
       const response = await fetch(endPoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -177,7 +174,7 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
           <div className="flex flex-col gap-5 items-center ">
             <div className="flex  gap-5">
               <TextField
-                label="Title"
+                label={t('Title')}
                 name="title"
                 variant="outlined"
                 fullWidth
@@ -186,7 +183,7 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
                 placeholder={`Enter Title...`}
               />
               <TextField
-                label="MOL"
+                label={t('MOL')}
                 name="mol"
                 variant="outlined"
                 fullWidth
@@ -199,7 +196,7 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
             </div>
             <div className="flex  gap-5">
               <TextField
-                label="Document Number"
+                label={t('Document Number')}
                 name="documentNumber"
                 variant="outlined"
                 fullWidth
@@ -211,14 +208,14 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
               <div className="w-full border border-gray-300 rounded-lg ">
                 <DateField
                   variant="outlined"
-                  label="Invoice Date"
+                  label={t('Invoice Date')}
                   value={formData.invoiceDate}
                   onChange={handleDateChange}
                 />
               </div>
 
               <TextField
-                label="Accountant"
+                label={t('Accountant')}
                 name="accountant"
                 variant="outlined"
                 fullWidth
@@ -229,7 +226,7 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
             </div>
 
             <div className="flex flex-col">
-              <Typography sx={{ color: 'black', ml: 1 }}>Invoice Payed</Typography>
+              <Typography sx={{ color: 'black', ml: 1 }}>{t('Invoice Payed')}</Typography>
               <Checkbox
                 name="invoicePayed"
                 checked={formData.invoicePayed}
@@ -238,13 +235,13 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
                 //   setFormData((prev) => ({ ...prev, invoicePayed: e.target.checked }))
                 // }
               />
-              <Typography sx={{ color: 'black', ml: 1 }}>Cancellation</Typography>
+              <Typography sx={{ color: 'black', ml: 1 }}>{t('Cancellation')}</Typography>
               <Checkbox
                 name="cancellation"
                 checked={formData.cancellation}
                 onChange={handleInputChange}
               />
-              <Typography sx={{ color: 'black', ml: 1 }}>IsWithNomenclature</Typography>
+              <Typography sx={{ color: 'black', ml: 1 }}>{t('IsWithNomenclature')}</Typography>
               <Checkbox
                 name="isWithNomenclature"
                 checked={formData.isWithNomenclature}
@@ -252,8 +249,8 @@ const InvoiceNoNomenclature: React.FC<InvoiceNoNomenclatureProps> = ({
               />
             </div>
             <div className="flex">
-              <Button onClick={handleSubmit}>{invoice ? 'Update' : 'Create'}</Button>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={handleSubmit}>{invoice ? t('Update') : t('Create')}</Button>
+              <Button onClick={onClose}>{t('Cancel')}</Button>
             </div>
           </div>
         </Box>

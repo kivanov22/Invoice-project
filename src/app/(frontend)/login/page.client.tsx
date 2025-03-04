@@ -3,6 +3,7 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
 const PageClient: React.FC = () => {
   const { setHeaderTheme } = useHeaderTheme()
@@ -14,6 +15,7 @@ const PageClient: React.FC = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
+  const { t } = useTranslation()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,7 +48,7 @@ const PageClient: React.FC = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img alt="Your Company" src="./images.png" className="mx-auto h-10 w-auto" />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            {t('Sign in to your account')}
           </h2>
         </div>
 
@@ -54,7 +56,7 @@ const PageClient: React.FC = () => {
           <form action="#" method="POST" className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Email address
+                {t('Email')}
               </label>
               <div className="mt-2">
                 <input
@@ -73,11 +75,11 @@ const PageClient: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  Password
+                  {t('Password')}
                 </label>
                 <div className="text-sm">
                   <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
+                    {t('Forgot password')}
                   </a>
                 </div>
               </div>
@@ -100,7 +102,7 @@ const PageClient: React.FC = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                {t('Login')}
               </button>
             </div>
           </form>
@@ -112,7 +114,7 @@ const PageClient: React.FC = () => {
             /register"
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
-              Register here
+              {t('Register')}
             </Link>
           </p>
         </div>
