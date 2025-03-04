@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Checkbox, MenuItem, Select, TextField } from '@mui/material'
 import { ProductCategories } from '@/collections/ProductCategories'
+import { useTranslation } from 'react-i18next'
 
 const style = {
   display: 'flex',
@@ -44,7 +45,6 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
   onSave,
   product,
 }) => {
-  // const [open, setOpen] = React.useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [formData, setFormData] = useState({
     title: '',
@@ -56,8 +56,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
     active: false,
     category: '' as string | Category,
   })
-  // const handleOpen = () => setOpen(true)
-  // const handleClose = () => setOpen(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (open) {
@@ -121,7 +120,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
       const response = await fetch(endPoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formattedProduct), //product
+        body: JSON.stringify(formattedProduct),
       })
 
       if (response.ok) {
@@ -161,13 +160,13 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
             component="h2"
             sx={{ color: 'black', mb: 5 }}
           >
-            {product ? 'Update product' : 'Create product'}
+            {product ? t('Update product') : t('Create product')}
           </Typography>
 
           <div className="flex flex-col gap-5 items-center">
             <div className="flex  gap-5">
               <TextField
-                label="Code"
+                label={t('Code')}
                 name="code"
                 variant="outlined"
                 fullWidth
@@ -176,7 +175,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
                 placeholder={`Enter Code...`}
               />
               <TextField
-                label="Title"
+                label={t('Title')}
                 name="title"
                 variant="outlined"
                 fullWidth
@@ -185,7 +184,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
                 placeholder={`Enter Title...`}
               />
               <TextField
-                label="Brand"
+                label={t('Brand')}
                 name="brand"
                 variant="outlined"
                 fullWidth
@@ -196,7 +195,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
             </div>
             <div className="flex  gap-5">
               <TextField
-                label="Price"
+                label={t('Price')}
                 name="price"
                 variant="outlined"
                 fullWidth
@@ -205,7 +204,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
                 placeholder={`Enter Price...`}
               />
               <TextField
-                label="Discount"
+                label={t('Discount')}
                 name="discount"
                 variant="outlined"
                 fullWidth
@@ -214,7 +213,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
                 placeholder={`Enter Discount...`}
               />
               <TextField
-                label="Total Price"
+                label={t('Total Price')}
                 name="totalPrice"
                 variant="outlined"
                 fullWidth
@@ -225,7 +224,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
             </div>
 
             <div className="flex flex-col w-full">
-              <Typography sx={{ color: 'black', mb: 1 }}>Category</Typography>
+              <Typography sx={{ color: 'black', mb: 1 }}>{t('Category')}</Typography>
               <Select
                 value={
                   typeof formData.category === 'object' ? formData.category.id : formData.category
@@ -242,7 +241,7 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
             </div>
 
             <div className="flex flex-col">
-              <Typography sx={{ color: 'black', ml: 1 }}>Active</Typography>
+              <Typography sx={{ color: 'black', ml: 1 }}>{t('Active')}</Typography>
               <Checkbox
                 name="active"
                 checked={formData.active}
@@ -250,8 +249,8 @@ const ProductAddEditModal: React.FC<ProductAddEditModalProps> = ({
               />
             </div>
             <div className="flex">
-              <Button onClick={handleSubmit}>{product ? 'Update' : 'Create'}</Button>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={handleSubmit}>{product ? t('Update') : t('Create')}</Button>
+              <Button onClick={onClose}>{t('Cancel')}</Button>
             </div>
           </div>
         </Box>

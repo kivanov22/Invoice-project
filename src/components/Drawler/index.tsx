@@ -14,10 +14,12 @@ import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
 import { useRouter } from 'next/navigation'
 import MenuIcon from '@mui/icons-material/Menu'
+import { useTranslation } from 'react-i18next'
 
 export default function TemporaryDrawer({ navItems }: { navItems: any }) {
   const [open, setOpen] = React.useState(false)
   const router = useRouter()
+  const { t } = useTranslation()
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen)
@@ -71,7 +73,7 @@ export default function TemporaryDrawer({ navItems }: { navItems: any }) {
     <div className="text-white dark:text-black ">
       <Button className="text-white dark:text-black" onClick={toggleDrawer(true)}>
         <MenuIcon className="text-white" />
-        <span className="text-black dark:text-white">Menu</span>
+        <span className="text-black dark:text-white">{t('Menu')}</span>
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}

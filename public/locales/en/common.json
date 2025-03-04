@@ -162,5 +162,10 @@
   "Description": "Description",
   "Select": "Select",
   "Add Invoice": "Add Invoice",
-  "Invoice Payed": "Invoice Payed"
+  "Invoice Payed": "Invoice Payed",
+  "Menu": "Menu",
+  "No banks found": "No banks found",
+  "IBAN": "IBAN",
+  "Settings": "Settings",
+  "Your Profile": "Your Profile"
 }

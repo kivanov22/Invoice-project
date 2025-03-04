@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { TextField, Box } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 interface ProductFilterProps {
   onFilterChange: (filters: { code: string; title: string; brand: string }) => void
@@ -11,6 +12,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ onFilterChange }) => {
     title: '',
     brand: '',
   })
+  const { t } = useTranslation()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -32,12 +34,11 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ onFilterChange }) => {
         gap: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'black',
       }}
     >
       <div className="flex gap-2">
         <TextField
-          label="Code"
+          label={t('Code')}
           name="code"
           variant="outlined"
           fullWidth
@@ -46,7 +47,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ onFilterChange }) => {
           placeholder={`Enter code...`}
         />
         <TextField
-          label="Title"
+          label={t('Title')}
           name="title"
           variant="outlined"
           fullWidth
@@ -55,7 +56,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ onFilterChange }) => {
           placeholder={`Enter title...`}
         />
         <TextField
-          label="Brand"
+          label={t('Brand')}
           name="title"
           variant="outlined"
           fullWidth

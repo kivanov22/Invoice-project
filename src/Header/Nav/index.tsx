@@ -15,6 +15,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
   const navItems = data?.navItems || []
   const [checked, setChecked] = React.useState(true)
   const { i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -32,7 +33,7 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
         return <CMSLink key={i} {...link} appearance="link" />
       })}
       <Link href="/search">
-        <span className="sr-only text-white dark:text-black">Search</span>
+        <span className="sr-only text-white dark:text-black">{t('Search')}</span>
         <SearchIcon className="w-5 text-primary" />
       </Link>
       <Typography sx={{ color: 'white', dark: { color: 'black' } }}>EN</Typography>

@@ -12,6 +12,7 @@ import TemporaryDrawer from '@/components/Drawler'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Button } from '@payloadcms/ui'
 import { OverlayPanel } from 'primereact/overlaypanel'
+import { useTranslation } from 'react-i18next'
 
 interface HeaderClientProps {
   data: Header
@@ -22,10 +23,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
-  // const [user, setUser] = useState(null)
   const [user, setUser] = useState<User | null>(null)
   const [role, setRole] = useState(null) //admin or user
   const op = useRef<any>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setHeaderTheme(null)
@@ -57,7 +58,6 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }
 
   return (
-    // container
     <header className=" relative z-20 w-full" {...(theme ? { 'data-theme': theme } : {})}>
       <div className=" flex justify-evenly items-center">
         <div className="absolute top-7 left-0 z-50">
@@ -78,12 +78,12 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             <OverlayPanel ref={op}>
               {user ? (
                 <ul>
-                  <li className="p-2">Settings</li>
-                  <li className="p-2">Your Profile</li>
+                  <li className="p-2">{t('Settings')}</li>
+                  <li className="p-2">{t('Your Profile')}</li>
                   <Link href="/">
                     <li className="p-2">
                       <Button onClick={handleLogout} className="mr-5">
-                        Logout
+                        {t('Logout')}
                       </Button>
                     </li>
                   </Link>
@@ -91,17 +91,17 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               ) : (
                 <div className="flex flex-col gap-5">
                   <Link href="/login">
-                    <Button>Login</Button>
+                    <Button>{t('Login')}</Button>
                   </Link>
                   <Link href="/register">
-                    <Button>Register</Button>
+                    <Button>{t('Register')}</Button>
                   </Link>
                 </div>
               )}
             </OverlayPanel>
           </div>
-          <span className="text-white dark:text-white">{user?.email || 'User'}</span>
-          <span className="text-white dark:text-white">({user?.role || ''})</span>
+          <span className="text-white dark:text-white">{t(user?.email || 'User')}</span>
+          <span className="text-white dark:text-white">({t(user?.role || '')})</span>
         </div>
       </div>
     </header>

@@ -310,7 +310,6 @@ const CustomTable: React.FC<CustomTableProps> = ({ collection, onEdit, onDelete 
               {visibleRows.map((row, index) => {
                 const isItemSelected = selected.includes(row.id)
                 const labelId = `enhanced-table-checkbox-${index}`
-                // console.log(row)
 
                 return (
                   <TableRow

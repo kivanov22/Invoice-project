@@ -8,13 +8,11 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
-import Button from '@mui/material/Button'
 import { EditBankButton } from '../Bank/editButton'
 import { DeleteBankButton } from '../Bank/deleteButton'
 import { Typography } from '@mui/material'
 import { format, isValid } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 interface BasicTableProps {
   banks: any
@@ -24,40 +22,9 @@ interface BasicTableProps {
 
 // /const CustomTable: React.FC<CustomTableProps> = ({ collection, onEdit, onDelete }) => {
 const BasicTable: React.FC<BasicTableProps> = ({ banks, onEdit, onDelete }) => {
+  const { t } = useTranslation()
   if (banks.length === 0) {
-    return <Typography>No banks found.</Typography>
-  }
-
-  //TEst
-  const handleEdit = async (id: string) => {
-    try {
-      const response = await fetch('/api/banks/edit', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id,
-          data: {
-            title: 'Updated Title',
-            iban: 'Updated IBAN',
-          },
-        }),
-      })
-
-      if (response.ok) {
-        const updatedBank = await response.json()
-        console.log('Bank updated:', updatedBank)
-      } else {
-        console.error('Failed to update bank')
-      }
-    } catch (error) {
-      console.error('Error:', error)
-    }
-    // console.log(`Edit bank with ID: ${id}`)
-    // Add your edit logic here
-  }
-
-  const handleDelete = (id: string) => {
-    console.log(`Delete bank with ID: ${id}`)
+    return <Typography>{t('No banks found')}.</Typography>
   }
 
   return (
@@ -66,11 +33,11 @@ const BasicTable: React.FC<BasicTableProps> = ({ banks, onEdit, onDelete }) => {
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
-            <TableCell align="right">IBAN</TableCell>
-            <TableCell align="right">BIC</TableCell>
+            <TableCell align="right">{t('IBAN')}</TableCell>
+            <TableCell align="right">{t('BIC')}</TableCell>
             <TableCell align="right">Slug</TableCell>
-            <TableCell align="right">Created On</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell align="right">{t('Created On')}</TableCell>
+            <TableCell align="right">{t('Actions')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -90,24 +57,7 @@ const BasicTable: React.FC<BasicTableProps> = ({ banks, onEdit, onDelete }) => {
               </TableCell>
               <TableCell align="right">
                 <EditBankButton bankId={bank.id} onEdit={onEdit}></EditBankButton>
-                {/* <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => handleEdit(bank.id)}
-                  style={{ marginRight: '8px' }}
-                >
-                  Edit
-                </Button> */}
                 <DeleteBankButton id={bank.id} onDelete={onDelete}></DeleteBankButton>
-                {/* <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  onClick={() => handleDelete(bank.id)}
-                >
-                  Delete
-                </Button> */}
               </TableCell>
             </TableRow>
           ))}
