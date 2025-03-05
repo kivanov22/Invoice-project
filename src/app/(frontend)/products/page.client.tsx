@@ -12,6 +12,7 @@ import ProductFilter from '@/components/Product/productFilter'
 import CircularWithValueLabel from '@/components/common/Loader'
 import ProductAddEditModal from '@/components/Product/productAddEditDialog'
 import { useTranslation } from 'react-i18next'
+import DragDropDemo from '@/components/DragDrop'
 // import CategoryTree from '@/components/Product/categoryTree/CategoryTree'
 // import NewCategoryTree from '@/components/NewCategoryTre'
 
@@ -200,10 +201,11 @@ const PageClient: React.FC = () => {
 
       <div className="flex space-x-5">
         <div className="p-5 w-1/5 border border-black dark:border-white">
-          <BasicSimpleTreeView
+          {/* <BasicSimpleTreeView
             categories={productCategories}
             onCategorySelect={handleCategorySelect}
-          />
+          /> */}
+          <DragDropDemo categories={productCategories} />
           {/* <NewCategoryTree categories={productCategories}
             onCategorySelect={handleCategorySelect}/> */}
 
