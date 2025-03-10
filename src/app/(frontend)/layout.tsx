@@ -34,13 +34,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
-          <AdminBar
+          {/* <AdminBar
             adminBarProps={{
               preview: isEnabled,
             }}
-          />
+          /> */}
           <Header />
-          <SubNavigation />
+          <div className="pt-20">
+            <SubNavigation />
+          </div>
           {children}
           <SubFooter />
           <Footer />

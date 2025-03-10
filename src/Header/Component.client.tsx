@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import SettingsIcon from '@mui/icons-material/Settings'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import LoginIcon from '@mui/icons-material/Login'
+import MegaMenuComponent from '@/components/MegaMenu'
 
 interface HeaderClientProps {
   data: Header
@@ -62,19 +63,22 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }
 
   return (
-    <header className=" relative z-20 w-full" {...(theme ? { 'data-theme': theme } : {})}>
-      <div className=" flex justify-evenly items-center">
-        {/* <div className="absolute top-7 left-0 z-50">
-          <TemporaryDrawer navItems={data} />
-        </div> */}
+    <header
+      className="fixed top-0 left-0 w-full h-20 bg-white dark:bg-gray-900 shadow-md z-[9999] "
+      {...(theme ? { 'data-theme': theme } : {})}
+    >
+      <div className="flex justify-between items-center px-6 h-full">
         <div className="flex items-center gap-5">
           <Link href="/">
             <Logo loading="eager" priority="high" className="w-20 h-20" />
           </Link>
           <h1 className="text-3xl text-black dark:text-white">Extreme Consulting</h1>
         </div>
-        <HeaderNav data={data} />
-        <div className="flex items-center gap-5 text-black dark:text-white rounded-md h-20 min-w-[200px]">
+        <div className="relative z-[9999] ">
+          <MegaMenuComponent />
+        </div>
+
+        <div className="flex items-center gap-5 text-black dark:text-white h-20 min-w-[200px]">
           <div className="px-10">
             <Button onClick={(e) => op.current.toggle(e)}>
               <AccountCircleIcon />
@@ -82,28 +86,28 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
             <OverlayPanel ref={op}>
               {user ? (
                 <ul>
-                  <li className="p-2">
+                  <li className="p-2 flex items-center gap-2">
                     <SettingsIcon />
                     {t('Settings')}
                   </li>
-                  <li className="p-2">
+                  <li className="p-2 flex items-center gap-2">
                     <AccountBoxIcon />
                     {t('Your Profile')}
                   </li>
                   <Link href="/">
-                    <li className="p-2">
+                    <li className="p-2 flex items-center gap-2">
                       <LogoutIcon />
-                      <Button onClick={handleLogout} className="mr-5">
-                        {t('Logout')}
-                      </Button>
+                      <Button onClick={handleLogout}>{t('Logout')}</Button>
                     </li>
                   </Link>
                 </ul>
               ) : (
                 <div className="flex flex-col gap-5">
                   <Link href="/login">
-                    <LoginIcon />
-                    <Button>{t('Login')}</Button>
+                    <div className="flex items-center gap-2">
+                      <LoginIcon />
+                      <Button>{t('Login')}</Button>
+                    </div>
                   </Link>
                   <Link href="/register">
                     <Button>{t('Register')}</Button>
@@ -112,8 +116,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               )}
             </OverlayPanel>
           </div>
-          <span className="text-black dark:text-white">{t(user?.email || 'User')}</span>
-          <span className="text-black dark:text-white">({t(user?.role || '')})</span>
+          <span>{t(user?.email || 'User')}</span>
+          <span>({t(user?.role || '')})</span>
         </div>
       </div>
     </header>

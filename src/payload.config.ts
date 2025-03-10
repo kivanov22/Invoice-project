@@ -20,6 +20,7 @@ import { Banks } from './collections/Banks'
 import { Invoices } from './collections/Invoices'
 import { Products } from './collections/Products'
 import { ProductCategories } from './collections/ProductCategories'
+import { MegaMenu } from './collections/MegaMenu'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -76,6 +77,7 @@ export default buildConfig({
     Invoices,
     Products,
     ProductCategories,
+    MegaMenu,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

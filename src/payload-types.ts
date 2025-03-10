@@ -74,6 +74,7 @@ export interface Config {
     invoices: Invoice;
     products: Product;
     productCategories: ProductCategory;
+    megaMenu: MegaMenu;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -94,6 +95,7 @@ export interface Config {
     invoices: InvoicesSelect<false> | InvoicesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     productCategories: ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
+    megaMenu: MegaMenuSelect<false> | MegaMenuSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -799,6 +801,56 @@ export interface ProductCategory {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "megaMenu".
+ */
+export interface MegaMenu {
+  id: string;
+  items?:
+    | {
+        label: string;
+        icon?: string | null;
+        link: {
+          type: 'reference' | 'custom';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: string | Page;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: string | Post;
+              } | null);
+          url?: string | null;
+          newTab?: boolean | null;
+        };
+        subItems?:
+          | {
+              label: string;
+              link: {
+                type: 'reference' | 'custom';
+                reference?:
+                  | ({
+                      relationTo: 'pages';
+                      value: string | Page;
+                    } | null)
+                  | ({
+                      relationTo: 'posts';
+                      value: string | Post;
+                    } | null);
+                url?: string | null;
+                newTab?: boolean | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1004,6 +1056,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'productCategories';
         value: string | ProductCategory;
+      } | null)
+    | ({
+        relationTo: 'megaMenu';
+        value: string | MegaMenu;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1421,6 +1477,43 @@ export interface ProductCategoriesSelect<T extends boolean = true> {
   parent?: T;
   children?: T;
   productCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "megaMenu_select".
+ */
+export interface MegaMenuSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        label?: T;
+        icon?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              reference?: T;
+              url?: T;
+              newTab?: T;
+            };
+        subItems?:
+          | T
+          | {
+              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    reference?: T;
+                    url?: T;
+                    newTab?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

@@ -116,3 +116,20 @@ html[data-theme='dark'],
 html[data-theme='light'] {
   opacity: initial;
 }
+
+.p-megamenu .p-menuitem-link,
+.p-megamenu .p-menuitem-text  {
+  color: white !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.p-megamenu .p-menuitem-link:hover {
+ 
+  background-color: transparent !important; 
+}
+
+
+.p-megamenu .p-menuitem-link.p-menuitem-active {
+  background-color: transparent !important; 
+}

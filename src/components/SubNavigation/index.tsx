@@ -23,7 +23,7 @@ export default function SubNavigation() {
   }
 
   return (
-    <div className="flex items-center justify-evenly bg-gray-500 relative z-20">
+    <div className="flex items-center justify-evenly bg-gray-500 relative z-20 ">
       <div className="flex flex-1 ml-5">
         <SideMenu />
       </div>

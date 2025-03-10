@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Sidebar } from 'primereact/sidebar'
 import { Button } from 'primereact/button'
 import { Ripple } from 'primereact/ripple'
@@ -9,18 +10,77 @@ import ReceiptIcon from '@mui/icons-material/Receipt'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import HomeIcon from '@mui/icons-material/Home'
 
-export default function HeadlessDemo() {
+export default function SideMenuExpand() {
   const [visible, setVisible] = useState<boolean>(false)
   const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({})
+  const router = useRouter()
+  const [menuItems, setMenuItems] = useState<MegaMenuItem[]>([])
+
+  const icons = {
+    Dashboard: HomeIcon,
+    System: SettingsIcon,
+    Nomenclature: ReceiptIcon,
+    Invoicing: AssessmentIcon,
+    User: AccountCircleIcon,
+  }
 
   const toggleMenu = (key: string) => {
     setExpandedMenus((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
+  useEffect(() => {
+    async function fetchMenu() {
+      try {
+        const res = await fetch('/api/megaMenu')
+        const data = await res.json()
+
+        console.log('Check data:', data)
+
+        if (!data?.docs) return
+
+        const transformedMenu = data.docs.map((menu: { items: MegaMenuItem[] }) => ({
+          label: menu.items[0].label,
+          icon: menu.items[0].icon || undefined,
+          subItems: menu.items[0].subItems?.map((sub) => {
+            let linkUrl = '#'
+
+            if (sub.link) {
+              if (sub.link.type === 'reference' && sub.link.reference?.value?.slug) {
+                linkUrl = `/${sub.link.reference.value.slug}`
+              } else if (sub.link.type === 'custom' && sub.link.url) {
+                linkUrl = sub.link.url
+              }
+            }
+
+            return {
+              label: sub.label,
+              url: linkUrl,
+              newTab: sub.link?.newTab,
+            }
+          }),
+        }))
+
+        setMenuItems(transformedMenu)
+      } catch (error) {
+        console.error('Error fetching MegaMenu data:', error)
+      }
+    }
+
+    fetchMenu()
+  }, [])
+
+  const handleNavigation = (url: string, newTab: boolean = false) => {
+    if (newTab) {
+      window.open(url, '_blank')
+    } else {
+      router.push(url)
+    }
+  }
+
   return (
     <div className="card flex  justify-center">
       <Sidebar visible={visible} onHide={() => setVisible(false)} showCloseIcon={false}>
-        <div className="flex items-center justify-between px-4 pt-3 text-center mb-3">
+        <div className="flex items-center justify-between px-4 pt-3 text-center mb-3 mt-20">
           <div className="flex items-center gap-5 ">
             <Logo />
             <span className="font-semibold text-xl text-primary text-cyan-500">InvoiceApp</span>
@@ -45,170 +105,46 @@ export default function HeadlessDemo() {
                 <span className="ml-3 font-medium">Dashboard</span>
               </div>
               <hr />
+
               <div className="overflow-y-auto">
                 <ul className="list-none p-3 m-0">
-                  <li>
-                    <div
-                      className="p-ripple p-3 flex items-center gap-5 justify-between  cursor-pointer"
-                      onClick={() => toggleMenu('system')}
-                    >
-                      <SettingsIcon />
-                      <span className="font-medium">System</span>
-                      <i
-                        className={`pi pi-chevron-${expandedMenus['system'] ? 'down' : 'right'}`}
-                      ></i>
-                      <Ripple />
-                    </div>
-                    {expandedMenus['system'] && (
-                      <ul className="list-none p-0 m-0">
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Users</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Logs</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Companies</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                      </ul>
-                    )}
-                  </li>
+                  {menuItems.map((item, index) => (
+                    <li key={index}>
+                      <div
+                        className="p-ripple p-3 flex items-center gap-5 justify-between  cursor-pointer"
+                        onClick={() => toggleMenu(item.label)}
+                      >
+                        {icons[item.label] && React.createElement(icons[item.label])}
+                        {/* {(Icon && <Icon />)} */}
+
+                        <span className="font-medium">{item.label}</span>
+                        <i
+                          className={`pi pi-chevron-${expandedMenus[item.label] ? 'down' : 'right'}`}
+                        ></i>
+                        <Ripple />
+                      </div>
+                      <hr />
+                      {expandedMenus[item.label] && item.subItems && item.subItems.length > 0 && (
+                        <ul className="list-none p-0 m-0">
+                          {item.subItems.map((sub, subIndex) => (
+                            <li
+                              key={subIndex}
+                              onClick={() => handleNavigation(sub.url!, sub.newTab)}
+                            >
+                              <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
+                                <i className="pi pi-bookmark mr-2"></i>
+                                <span className="font-medium">{sub.label}</span>
+                                <Ripple />
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
                 </ul>
-                <hr />
               </div>
-              <div className="overflow-y-auto">
-                <ul className="list-none p-3 m-0">
-                  <li>
-                    <div
-                      className="p-ripple p-3 flex items-center gap-5 justify-between  cursor-pointer"
-                      onClick={() => toggleMenu('nomenclature')}
-                    >
-                      <ReceiptIcon />
-                      <span className="font-medium">Nomenclature</span>
-                      <i
-                        className={`pi pi-chevron-${expandedMenus['nomenclature'] ? 'down' : 'right'}`}
-                      ></i>
-                      <Ripple />
-                    </div>
-                    {expandedMenus['nomenclature'] && (
-                      <ul className="list-none p-0 m-0">
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Products</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Clients</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Currencies</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Measurements</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Document Types</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Banks</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Payments</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Law Applications</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round  hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Delivery</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                      </ul>
-                    )}
-                  </li>
-                </ul>
-                <hr />
-              </div>
-              <div className="overflow-y-auto">
-                <ul className="list-none p-3 m-0">
-                  <li>
-                    <div
-                      className="p-ripple p-3 flex items-center gap-5 justify-between text-600 cursor-pointer"
-                      onClick={() => toggleMenu('invoicing')}
-                    >
-                      <AssessmentIcon />
-                      <span className="font-medium">Invoicing</span>
-                      <i
-                        className={`pi pi-chevron-${expandedMenus['invoicing'] ? 'down' : 'right'}`}
-                      ></i>
-                      <Ripple />
-                    </div>
-                    {expandedMenus['invoicing'] && (
-                      <ul className="list-none p-0 m-0">
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Invoices</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                        <li>
-                          <a className="p-ripple flex items-center gap-2 cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
-                            <i className="pi pi-bookmark mr-2"></i>
-                            <span className="font-medium">Reports</span>
-                            <Ripple />
-                          </a>
-                        </li>
-                      </ul>
-                    )}
-                  </li>
-                </ul>
-                <hr />
-              </div>
+
               {/* User */}
               <div className="mt-auto items-center text-center">
                 <hr className="mb-3 mx-3 border-top-1 border-none surface-border" />
