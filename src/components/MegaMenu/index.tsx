@@ -13,8 +13,6 @@ const MegaMenuComponent: React.FC = () => {
         const res = await fetch('/api/megaMenu')
         const data = await res.json()
 
-        console.log('Check data:', data)
-
         if (!data?.docs) return
 
         const transformedMenu = data.docs.map((menu: { items: MegaMenuItem[] }) => ({
@@ -63,7 +61,7 @@ const MegaMenuComponent: React.FC = () => {
           <li key={index} className="group relative">
             <button className="px-4 py-2">{item.label}</button>
             {item.subItems && item.subItems.length > 0 && (
-              <ul className="absolute left-0 mt-2 w-48 bg-gray-900 text-white rounded-lg shadow-lg hidden group-hover:block">
+              <ul className="absolute left-0 mt-1 w-48 bg-gray-900 text-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
                 {item.subItems.map((sub, subIndex) => (
                   <li key={subIndex} className="border-b border-gray-700">
                     <button
