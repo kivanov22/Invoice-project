@@ -64,7 +64,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
 
   return (
     <header
-      className="fixed top-0 left-0 w-full h-20 bg-white dark:bg-gray-900 shadow-md z-[9999] "
+      className="fixed top-0 left-0 w-full h-20 bg-[#111827] dark:bg-gray-900 shadow-md z-[9999] "
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <div className="flex justify-between items-center px-6 h-full">
@@ -72,13 +72,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           <Link href="/">
             <Logo loading="eager" priority="high" className="w-20 h-20" />
           </Link>
-          <h1 className="text-3xl text-black dark:text-white">Extreme Consulting</h1>
+          <h1 className="text-3xl text-white dark:text-white">Extreme Consulting</h1>
         </div>
         <div className="relative z-[9999] ">
           <MegaMenuComponent />
         </div>
 
-        <div className="flex items-center gap-5 text-black dark:text-white h-20 min-w-[200px]">
+        <div className="flex items-center gap-5 text-white dark:text-white h-20 min-w-[200px]">
           <div className="px-10">
             <Button onClick={(e) => op.current.toggle(e)}>
               <AccountCircleIcon />
