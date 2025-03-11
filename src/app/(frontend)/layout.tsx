@@ -21,6 +21,7 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import SubFooter from '@/components/SubFooter'
 import SubNavigation from '@/components/SubNavigation'
+import { AuthProvider } from '@/context/AuthProvider'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -34,18 +35,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <Providers>
-          {/* <AdminBar
+          <AuthProvider>
+            {/* <AdminBar
             adminBarProps={{
               preview: isEnabled,
             }}
           /> */}
-          <Header />
-          <div className="pt-20">
-            <SubNavigation />
-          </div>
-          {children}
-          <SubFooter />
-          <Footer />
+            <Header />
+            <div className="pt-20">
+              <SubNavigation />
+            </div>
+            {children}
+            <SubFooter />
+            <Footer />
+          </AuthProvider>
         </Providers>
       </body>
     </html>

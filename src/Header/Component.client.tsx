@@ -4,10 +4,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
-import type { Header, User } from '@/payload-types'
+import type { Header } from '@/payload-types'
 
 import { Logo } from '@/components/Logo/Logo'
-import { HeaderNav } from './Nav'
 import TemporaryDrawer from '@/components/Drawler'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Button } from '@payloadcms/ui'
@@ -18,6 +17,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import LoginIcon from '@mui/icons-material/Login'
 import MegaMenuComponent from '@/components/MegaMenu'
+import { useAuth } from '@/context/AuthProvider'
 
 interface HeaderClientProps {
   data: Header
@@ -28,10 +28,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
-  const [user, setUser] = useState<User | null>(null)
-  const [role, setRole] = useState(null) //admin or user
   const op = useRef<any>(null)
   const { t } = useTranslation()
+  const { user, role, handleLogout } = useAuth()
+  console.log(user?.name)
 
   useEffect(() => {
     setHeaderTheme(null)
@@ -42,25 +42,6 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     if (headerTheme && headerTheme !== theme) setTheme(headerTheme)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTheme])
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-  }, [])
-
-  const handleLogout = async () => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
-    setUser(null)
-    setRole(null)
-
-    await fetch('/api/auth/logout', {
-      method: 'POST',
-      credentials: 'include',
-    })
-  }
 
   return (
     <header
@@ -116,8 +97,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
               )}
             </OverlayPanel>
           </div>
-          <span>{t(user?.email || 'User')}</span>
-          <span>({t(user?.role || '')})</span>
+          <span>{t(user?.name || 'User')}</span>
+          <span>( {t(role || '')} )</span>
         </div>
       </div>
     </header>

@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 
 export async function POST(req: Request) {
   const payload = await getPayload({ config: configPromise })
-  const { email, password } = await req.json()
+  const { email, password, name } = await req.json()
 
   if (!email || !password) {
     return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
@@ -15,11 +15,11 @@ export async function POST(req: Request) {
   try {
     const user = await payload.create({
       collection: 'users',
-      data: { email, password, role: userRole },
+      data: { email, name, password, role: userRole },
     })
     return NextResponse.json(user, { status: 200 })
   } catch (error) {
     console.error('Error creating a user:', error)
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+    return NextResponse.json({ error: 'Invalid credentialssi' }, { status: 401 })
   }
 }

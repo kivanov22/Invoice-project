@@ -7,9 +7,6 @@ export async function POST(req: Request) {
   const payload = await getPayload({ config: configPromise })
   const { email, password } = await req.json()
 
-  console.log('Check email', email)
-  console.log('Check password', password)
-
   if (!email || !password) {
     return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
   }
@@ -38,7 +35,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
-        user: { id: user.user.id, email: user.user.email, role: user.user.role, token: user.token },
+        user: {
+          id: user.user.id,
+          email: user.user.email,
+          name: user.user.name,
+          role: user.user.role,
+          token: user.token,
+        },
       },
       { status: 200 },
     )

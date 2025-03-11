@@ -9,12 +9,14 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import HomeIcon from '@mui/icons-material/Home'
+import { useAuth } from '@/context/AuthProvider'
 
 export default function SideMenuExpand() {
   const [visible, setVisible] = useState<boolean>(false)
   const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({})
   const router = useRouter()
   const [menuItems, setMenuItems] = useState<MegaMenuItem[]>([])
+  const { user, role, handleLogout } = useAuth()
 
   const icons = {
     Dashboard: HomeIcon,
@@ -146,14 +148,16 @@ export default function SideMenuExpand() {
               </div>
 
               {/* User */}
-              <div className="mt-auto items-center text-center">
+              <div className="mt-auto  text-center">
                 <hr className="mb-3 mx-3 border-top-1 border-none surface-border" />
-                <a className="m-3 flex align-items-center cursor-pointer p-3 gap-2 border-round  hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                <p className="m-3 flex cursor-pointer p-3 gap-2 border-round  hover:surface-100 transition-duration-150 transition-colors p-ripple">
                   <AccountCircleIcon />
-                  <span className="font-bold">Amy Elsner</span>
-                  <span className="font-bold">(User)</span>
-                </a>
-                <Button>Logout</Button>
+                  <span className="font-bold">{user?.name}</span>
+                  <span className="font-bold">({role})</span>
+                </p>
+                <Button onClick={handleLogout} className="">
+                  Logout
+                </Button>
               </div>
             </div>
           </div>
