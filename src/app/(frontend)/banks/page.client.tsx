@@ -82,7 +82,7 @@ const PageClient: React.FC = () => {
           <AddBankButton />
         </div>
       </div>
-      <div className="flex space-x-5 items-center border border-black dark:border-white p-5 mb-5">
+      <div className="flex space-x-5 items-center border border-gray-400 dark:border-white p-5 mb-5 ml-20 mr-20">
         <div className="flex flex-col flex-1">
           <BanksFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
@@ -105,7 +105,7 @@ const PageClient: React.FC = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <div className="ml-4 mr-4">
+        <div className="ml-20 mr-20">
           <BasicTable banks={banks} onEdit={handleUpdate} onDelete={handleUpdate} />
         </div>
       )}
