@@ -22,6 +22,7 @@ export default {
     'bg-success/30',
     'border-warning',
     'bg-warning/30',
+    'bg-transparent',
   ],
   theme: {
     container: {

@@ -53,7 +53,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
           <Link href="/">
             <Logo loading="eager" priority="high" className="w-20 h-20" />
           </Link>
-          <h1 className="text-3xl text-white dark:text-white">Extreme Consulting</h1>
+          <h1 className="text-3xl text-white dark:text-white">Invoice App</h1>
         </div>
         <div className="relative z-[9999] ">
           <MegaMenuComponent />
