@@ -21,6 +21,17 @@ import { Invoices } from './collections/Invoices'
 import { Products } from './collections/Products'
 import { ProductCategories } from './collections/ProductCategories'
 import { MegaMenu } from './collections/MegaMenu'
+import { LawApplications } from './collections/LawApplications'
+import { Payments } from './collections/Payments'
+import { Measurements } from './collections/Measurements'
+import { Persons } from './collections/Persons'
+import { InvoiceItems } from './collections/InvoiceItems'
+import { Suppliers } from './collections/Suppliers'
+import { MolDropDown } from './collections/MolDropDown'
+import { DocumentTypes } from './collections/DocumentTypes'
+import { Currencies } from './collections/Currencies'
+import { Companies } from './collections/Companies'
+import { Clients } from './collections/Clients'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -78,6 +89,17 @@ export default buildConfig({
     Products,
     ProductCategories,
     MegaMenu,
+    Persons,
+    Measurements,
+    Payments,
+    LawApplications,
+    InvoiceItems,
+    Suppliers,
+    MolDropDown,
+    DocumentTypes,
+    Currencies,
+    Companies,
+    Clients,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

@@ -75,6 +75,17 @@ export interface Config {
     products: Product;
     productCategories: ProductCategory;
     megaMenu: MegaMenu;
+    persons: Person;
+    measurements: Measurement;
+    payments: Payment;
+    lawApplications: LawApplication;
+    invoiceItems: InvoiceItem;
+    suppliers: Supplier;
+    molDropDown: MolDropDown;
+    documentTypes: DocumentType;
+    currencies: Currency;
+    companies: Company;
+    clients: Client;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -96,6 +107,17 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     productCategories: ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     megaMenu: MegaMenuSelect<false> | MegaMenuSelect<true>;
+    persons: PersonsSelect<false> | PersonsSelect<true>;
+    measurements: MeasurementsSelect<false> | MeasurementsSelect<true>;
+    payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    lawApplications: LawApplicationsSelect<false> | LawApplicationsSelect<true>;
+    invoiceItems: InvoiceItemsSelect<false> | InvoiceItemsSelect<true>;
+    suppliers: SuppliersSelect<false> | SuppliersSelect<true>;
+    molDropDown: MolDropDownSelect<false> | MolDropDownSelect<true>;
+    documentTypes: DocumentTypesSelect<false> | DocumentTypesSelect<true>;
+    currencies: CurrenciesSelect<false> | CurrenciesSelect<true>;
+    companies: CompaniesSelect<false> | CompaniesSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -851,6 +873,193 @@ export interface MegaMenu {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "persons".
+ */
+export interface Person {
+  id: string;
+  name?: string | null;
+  tempId?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  email?: string | null;
+  employeePosition?: string | null;
+  hasPriority?: boolean | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "measurements".
+ */
+export interface Measurement {
+  id: string;
+  title?: string | null;
+  name?: string | null;
+  shortName?: string | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: string;
+  name?: string | null;
+  identifier?: string | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lawApplications".
+ */
+export interface LawApplication {
+  id: string;
+  name?: string | null;
+  shortName?: string | null;
+  identifier?: string | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoiceItems".
+ */
+export interface InvoiceItem {
+  id: string;
+  name?: string | null;
+  articleId?: string | null;
+  products?: (string | null) | Product;
+  measurementId?: string | null;
+  measurements: string | Measurement;
+  totalQuantity?: number | null;
+  price?: number | null;
+  discount?: number | null;
+  discountPrice?: number | null;
+  totalPrice?: number | null;
+  VAT?: number | null;
+  boxes?: number | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers".
+ */
+export interface Supplier {
+  id: string;
+  name?: string | null;
+  customId?: string | null;
+  identifier?: string | null;
+  vatNumber?: string | null;
+  state?: string | null;
+  city?: string | null;
+  address?: string | null;
+  ownerName?: string | null;
+  ownerEmail?: string | null;
+  ownerPhone?: string | null;
+  ownerBank?: string | null;
+  ownerIBAN?: string | null;
+  ownerBIC?: string | null;
+  isVATRegistered?: boolean | null;
+  isCompany?: boolean | null;
+  persons: string | Person;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "molDropDown".
+ */
+export interface MolDropDown {
+  id: string;
+  clientId?: string | null;
+  persons: string | Person;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documentTypes".
+ */
+export interface DocumentType {
+  id: string;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "currencies".
+ */
+export interface Currency {
+  id: string;
+  name?: string | null;
+  fullName?: string | null;
+  code?: string | null;
+  units?: number | null;
+  rate?: number | null;
+  currencyRateDate?: string | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "companies".
+ */
+export interface Company {
+  id: string;
+  name?: string | null;
+  country?: string | null;
+  city?: string | null;
+  address?: string | null;
+  identityNumber?: string | null;
+  identityNumberByDDS?: string | null;
+  bankName?: string | null;
+  companyIBAN?: string | null;
+  companyBIC?: string | null;
+  percentDDS?: number | null;
+  manager?: string | null;
+  phone?: string | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: string;
+  customId?: string | null;
+  clientName?: string | null;
+  identifier?: string | null;
+  vatNumber?: string | null;
+  state?: string | null;
+  city?: string | null;
+  address?: string | null;
+  ownerName?: string | null;
+  ownerEmail?: string | null;
+  ownerPhone?: string | null;
+  ownerBank?: string | null;
+  ownerIBAN?: string | null;
+  ownerBIC?: string | null;
+  isVATRegistered?: boolean | null;
+  isCompany?: boolean | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1060,6 +1269,50 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'megaMenu';
         value: string | MegaMenu;
+      } | null)
+    | ({
+        relationTo: 'persons';
+        value: string | Person;
+      } | null)
+    | ({
+        relationTo: 'measurements';
+        value: string | Measurement;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: string | Payment;
+      } | null)
+    | ({
+        relationTo: 'lawApplications';
+        value: string | LawApplication;
+      } | null)
+    | ({
+        relationTo: 'invoiceItems';
+        value: string | InvoiceItem;
+      } | null)
+    | ({
+        relationTo: 'suppliers';
+        value: string | Supplier;
+      } | null)
+    | ({
+        relationTo: 'molDropDown';
+        value: string | MolDropDown;
+      } | null)
+    | ({
+        relationTo: 'documentTypes';
+        value: string | DocumentType;
+      } | null)
+    | ({
+        relationTo: 'currencies';
+        value: string | Currency;
+      } | null)
+    | ({
+        relationTo: 'companies';
+        value: string | Company;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: string | Client;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1514,6 +1767,182 @@ export interface MegaMenuSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "persons_select".
+ */
+export interface PersonsSelect<T extends boolean = true> {
+  name?: T;
+  tempId?: T;
+  phone?: T;
+  address?: T;
+  email?: T;
+  employeePosition?: T;
+  hasPriority?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "measurements_select".
+ */
+export interface MeasurementsSelect<T extends boolean = true> {
+  title?: T;
+  name?: T;
+  shortName?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments_select".
+ */
+export interface PaymentsSelect<T extends boolean = true> {
+  name?: T;
+  identifier?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lawApplications_select".
+ */
+export interface LawApplicationsSelect<T extends boolean = true> {
+  name?: T;
+  shortName?: T;
+  identifier?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoiceItems_select".
+ */
+export interface InvoiceItemsSelect<T extends boolean = true> {
+  name?: T;
+  articleId?: T;
+  products?: T;
+  measurementId?: T;
+  measurements?: T;
+  totalQuantity?: T;
+  price?: T;
+  discount?: T;
+  discountPrice?: T;
+  totalPrice?: T;
+  VAT?: T;
+  boxes?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers_select".
+ */
+export interface SuppliersSelect<T extends boolean = true> {
+  name?: T;
+  customId?: T;
+  identifier?: T;
+  vatNumber?: T;
+  state?: T;
+  city?: T;
+  address?: T;
+  ownerName?: T;
+  ownerEmail?: T;
+  ownerPhone?: T;
+  ownerBank?: T;
+  ownerIBAN?: T;
+  ownerBIC?: T;
+  isVATRegistered?: T;
+  isCompany?: T;
+  persons?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "molDropDown_select".
+ */
+export interface MolDropDownSelect<T extends boolean = true> {
+  clientId?: T;
+  persons?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documentTypes_select".
+ */
+export interface DocumentTypesSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "currencies_select".
+ */
+export interface CurrenciesSelect<T extends boolean = true> {
+  name?: T;
+  fullName?: T;
+  code?: T;
+  units?: T;
+  rate?: T;
+  currencyRateDate?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "companies_select".
+ */
+export interface CompaniesSelect<T extends boolean = true> {
+  name?: T;
+  country?: T;
+  city?: T;
+  address?: T;
+  identityNumber?: T;
+  identityNumberByDDS?: T;
+  bankName?: T;
+  companyIBAN?: T;
+  companyBIC?: T;
+  percentDDS?: T;
+  manager?: T;
+  phone?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  customId?: T;
+  clientName?: T;
+  identifier?: T;
+  vatNumber?: T;
+  state?: T;
+  city?: T;
+  address?: T;
+  ownerName?: T;
+  ownerEmail?: T;
+  ownerPhone?: T;
+  ownerBank?: T;
+  ownerIBAN?: T;
+  ownerBIC?: T;
+  isVATRegistered?: T;
+  isCompany?: T;
+  isActive?: T;
   updatedAt?: T;
   createdAt?: T;
 }

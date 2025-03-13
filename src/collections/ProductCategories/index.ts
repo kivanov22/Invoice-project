@@ -38,5 +38,8 @@ export const ProductCategories: CollectionConfig = {
   ],
   access: {
     read: () => true,
+    create: () => true,
+    update: () => true,
+    delete: () => true,
   },
 }
