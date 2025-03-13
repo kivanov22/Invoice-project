@@ -127,6 +127,7 @@ const PageClient: React.FC = () => {
   }
 
   const handleCategorySelect = (categoryId: string) => {
+    console.log('Selected category:', categoryId)
     fetchProducts({ ...filters, categoryId })
   }
 
@@ -143,11 +144,6 @@ const PageClient: React.FC = () => {
   const handleSaveProduct = async () => {
     await fetchProducts()
     handleCloseModal()
-  }
-
-  const handleCategoryUpdate = (updatedCategories: any) => {
-    console.log('Updated categories:', updatedCategories)
-    setProductCategories(updatedCategories)
   }
 
   if (loading) {
@@ -178,7 +174,7 @@ const PageClient: React.FC = () => {
         product={selectedProduct}
       />
 
-      <div className="flex space-x-5 items-center border border-black dark:border-white p-5 mb-5">
+      <div className="flex space-x-5 items-center border border-gray-200 dark:border-white p-5 mb-5 ml-20 mr-20">
         <div className="flex flex-col flex-1">
           <ProductFilter onFilterChange={setFilters} />
           <div className="flex items-center ml-4">
@@ -200,19 +196,8 @@ const PageClient: React.FC = () => {
       </div>
 
       <div className="flex space-x-5">
-        <div className="p-5 w-1/5 border border-black dark:border-white">
-          {/* <BasicSimpleTreeView
-            categories={productCategories}
-            onCategorySelect={handleCategorySelect}
-          /> */}
-          <DragDropDemo categories={productCategories} />
-          {/* <NewCategoryTree categories={productCategories}
-            onCategorySelect={handleCategorySelect}/> */}
-
-          {/* <CategoryTree
-            categories={productCategories.docs}
-            onCategoryUpdate={handleCategoryUpdate}
-          /> */}
+        <div className="p-5 w-1/5 border border-black dark:border-white ml-10">
+          <DragDropDemo categories={productCategories} onCategorySelect={handleCategorySelect} />
         </div>
         <div className=" w-5/6">
           {loading ? (

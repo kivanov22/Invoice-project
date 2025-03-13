@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Tree, TreeDragDropEvent } from 'primereact/tree'
+import { Tree, TreeDragDropEvent, TreeSelectionEvent } from 'primereact/tree'
 import { TreeNode } from 'primereact/treenode'
-// import { NodeService } from './service/NodeService';
 
 interface Category {
   id: string
@@ -13,6 +12,7 @@ interface Category {
 
 interface DragDropDemoProps {
   categories: { docs: Category[] }
+  onCategorySelect: (categoryId: string) => void
 }
 
 const buildCategoryTree = (categories: Category[]): Category[] => {
@@ -42,15 +42,14 @@ const convertToTreeNodes = (categories: Category[]): TreeNode[] => {
   return categories.map((category) => ({
     key: category.id,
     label: category.title,
-    data: { productCount: category.productCount },
+    data: { id: category.id, productCount: category.productCount },
     children: category.children ? convertToTreeNodes(category.children) : [],
   }))
 }
 
-const DragDropDemo: React.FC<DragDropDemoProps> = ({ categories }) => {
+const DragDropDemo: React.FC<DragDropDemoProps> = ({ categories, onCategorySelect }) => {
   const [nodes, setNodes] = useState<TreeNode[]>([])
-
-  console.log(categories)
+  const [selectedKey, setSelectedKey] = useState<string | null>(null)
 
   useEffect(() => {
     const categoryTree = buildCategoryTree(categories.docs)
@@ -58,11 +57,25 @@ const DragDropDemo: React.FC<DragDropDemoProps> = ({ categories }) => {
     setNodes(convertToTreeNodes(categoryTree))
   }, [categories])
 
+  const handleSelection = (e: TreeSelectionEvent) => {
+    const selectedCategoryId = e.value as string
+    console.log(selectedCategoryId)
+
+    setSelectedKey(selectedCategoryId)
+
+    if (selectedCategoryId) {
+      onCategorySelect(selectedCategoryId)
+    }
+  }
+
   return (
-    <div className="card flex justify-content-center">
+    <div className="card flex justify-content-center ">
       <Tree
         value={nodes}
         dragdropScope="demo"
+        selectionMode="single"
+        selectionKeys={selectedKey ? { [selectedKey]: true } : {}}
+        onSelectionChange={handleSelection}
         onDragDrop={(e: TreeDragDropEvent) => setNodes(e.value)}
         className="w-full md:w-30rem"
       />
